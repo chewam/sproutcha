@@ -1,0 +1,91 @@
+<!-- <!DOCTYPE html> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <title>sproutcha :: model :: extjs</title>
+        <link rel="stylesheet" href="http://extjs.cachefly.net/ext-4.0.2a/resources/css/ext-all-gray.css" type="text/css" media="screen" charset="utf-8">
+        <script type="text/javascript" src="http://extjs.cachefly.net/ext-4.0.2a/ext-all.js"></script>
+
+        <style>
+            form {border: 1px solid #DDD; border-radius: 5px; display: inline-block; padding: 20px; margin: 20px; text-align: right;}
+            label {width: 62px; text-align: right; display: inline-block;}
+            input {margin: 2px 0;}
+        </style>
+    </head>
+
+    <body>
+
+        <form>
+            <label>First name:</label>
+            <input name="first_name" />
+            <br />
+            <label>Last name:</label>
+            <input name="last_name" />
+            <br />
+            <label>salary:</label>
+            <input name="salary" />
+            <br /><br />
+            <button type="button" onclick="submitFormData();">submit</button>
+        </form>
+
+        <script type="text/javascript">
+
+            var employee,
+                inputs = Ext.select('input');
+
+            var loadFormData = function(data) {
+                inputs.each(function(input) {
+                    input.dom.value = data[input.dom.name];
+                });
+            };
+
+            var submitFormData = function() {
+                var data = getFormData();
+                saveData(data);
+            };
+
+            var saveData = function(data) {
+                employee.set(data);
+                employee.save({
+                    success: function() {
+                        alert("employee saved");
+                    }
+                });
+            };
+
+            var getFormData = function() {
+                var data = {};
+                inputs.each(function(input) {
+                    data[input.dom.name] = input.dom.value;
+                });
+                return data;
+            };
+
+            Ext.define('Employee', {
+                extend: 'Ext.data.Model',
+                proxy: {
+                    type: 'rest',
+                    reader: {root: 'objects'},
+                    url: 'http://192.168.1.24:9876/api/v1/employee'
+                },
+                fields: ['id', 'first_name', 'last_name', 'salary']
+            });
+
+            Ext.onReady(function() {
+
+                var Employee = Ext.ModelManager.getModel('Employee');
+
+                Employee.load(1, {
+                    success: function(record) {
+                        employee = record;
+                        loadFormData(employee.data);
+                    }
+                });
+            
+            });
+
+        </script>
+
+    </body>
+</html>
