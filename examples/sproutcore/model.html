@@ -38,30 +38,30 @@
 
   <body>
     <script type="text/x-handlebars">
-      <form class="container">
+      {{#view App.Form contentBinding="App.currentEmployee"}}
         <div class="clearfix">
           <label>First name:</label>
           <div class="input">
-            {{view App.TextField valueBinding="App.currentEmployee.first_name"}}
+            {{view App.TextField valueBinding="content.first_name"}}
           </div>
         </div>
         <div class="clearfix">
           <label>Last name:</label>
           <div class="input">
-            {{view App.TextField valueBinding="App.currentEmployee.last_name"}}
+            {{view App.TextField valueBinding="content.last_name"}}
           </div>
         </div>
         <div class="clearfix">
           <label>Salary:</label>
           <div class="input">
-            {{view App.TextField valueBinding="App.currentEmployee.salary" type="number"}}
+            {{view App.TextField valueBinding="content.salary" type="number"}}
           </div>
         </div>
         <div class="actions">
           {{view App.Spinner}}
-          {{#view App.Button action="save"}}Save{{/view}}
+          {{view App.SaveButton}}
         </div>
-      </form>
+      {{/view}}
     </script>
 
     <script>
@@ -84,13 +84,12 @@
         updateRecord: function(store, storeKey) {
           var id = store.idFor(storeKey),
               url = 'http://demo.revolunet.com:9876/api/v1/employee/%@'.fmt(id),
-              record = store.materializeRecord(storeKey),
-              data = record.getProperties('first_name', 'last_name', 'salary');
+              record = store.materializeRecord(storeKey);
 
           $.ajax(url, {
             contentType: 'application/json',
             type: 'PUT',
-            data: JSON.stringify(data),
+            data: record.toJSON(true),
             success: function() {
               store.dataSourceDidComplete(storeKey);
             }
@@ -106,32 +105,34 @@
         last_name: SC.Record.attr(String),
         salary: SC.Record.attr(Number),
 
-        save: function() {
-          App.store.commitRecords();
-        },
-
-        toJSON: function() {
-          return this.get('store').readDataHash(this.get('storeKey'));
-        },
-
-        toString: function() {
-          return JSON.stringify(this.toJSON());
+        toJSON: function(stringify) {
+          var data = this.getProperties('first_name', 'last_name', 'salary');
+          return stringify ? JSON.stringify(data) : data;
         }
       });
 
       App.set('currentEmployee', App.store.find(App.Employee, 1));
 
-      App.TextField = SC.TextField.extend({
-        disabledBinding: SC.Binding.not('App.currentEmployee.isLoaded'),
-        insertNewline: function() {
-          App.currentEmployee.save();
+      App.Form = SC.View.extend({
+        tagName: 'form',
+        classNames: ['container'],
+        submit: function(evt) {
+          evt.preventDefault();
+          App.store.commitRecords();
         }
       });
 
-      App.Button = SC.Button.extend({
+      App.TextField = SC.TextField.extend({
+        disabledBinding: SC.Binding.not('App.currentEmployee.isLoaded')
+      });
+
+      App.SaveButton = SC.Button.extend({
         classNames: ['btn'],
-        targetBinding: 'App.currentEmployee',
-        disabledBinding: SC.Binding.not('target.isLoaded')
+        tagName: 'input',
+        type: 'submit',
+        attributeBindings: ['value'],
+        value: 'Save',
+        disabledBinding: SC.Binding.not('App.currentEmployee.isLoaded')
       });
 
       App.Spinner = SC.View.extend({
