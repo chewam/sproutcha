@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>sproutcha :: store & templates :: extjs</title>
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+        <script type="text/javascript" src="http://extjs.cachefly.net/ext-4.0.2a/ext-all.js"></script>
+
+        <style>
+            .container {
+                width: 480px;
+                margin-top: 20px;
+            }
+
+            .pagination {
+                margin: 0;
+            }
+
+            .toolbar {
+                width: 100%;
+                margin-top: 5px;
+                display: -moz-box;
+                display: -webkit-box;
+            }
+
+            #info {
+                -moz-box-flex: 1;
+                -webkit-box-flex: 1;
+            }
+
+            #info div {
+                font-size: .9em;
+                text-align: right;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div id="grid"></div>
+            <div class="toolbar">
+                <div class="pagination">
+                    <ul>
+                        <li class="prev disabled"><a href="#">&larr; Previous</a></li>
+                        <li class="next"><a href="#">Next &rarr;</a></li>
+                    </ul>
+                </div>
+                <div id="info"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+            Ext.define('Employee', {
+                extend: 'Ext.data.Model',
+                proxy: {
+                    type: 'rest',
+                    reader: {
+                        root: 'objects',
+                        totalProperty: 'meta.total_count'
+                    },
+                    startParam: 'offset',
+                    url: 'http://192.168.1.24:9876/api/v1/employee'
+                },
+                fields: ['id', 'first_name', 'last_name', 'salary', 'company']
+            });
+
+            Ext.onReady(function() {
+
+                var buttons = Ext.select('li'),
+                    previousButton = Ext.get(buttons.first().dom),
+                    nextButton = Ext.get(buttons.last().dom);
+
+                previousButton.on('click', function() {
+                    if (!this.hasCls('disabled')) {
+                        nextButton.removeCls('disabled');
+                        store.previousPage();
+                    }
+                    if (store.currentPage == 1) {
+                        this.addCls('disabled');
+                    }
+                });
+
+                nextButton.on('click', function() {
+                    var pageCount = Math.ceil(store.getTotalCount() / store.pageSize);
+                    if (!this.hasCls('disabled')) {
+                        previousButton.removeCls('disabled');
+                        store.nextPage();
+                    }
+                    if (store.currentPage === pageCount) {
+                        this.addCls('disabled')
+                    }
+                });
+
+                var gridTpl = Ext.create('Ext.XTemplate',
+                    '<table class="zebra-striped">',
+                        '<thead><tr>',
+                            '<th>First name</th>',
+                            '<th>Last Name</th>',
+                            '<th>Salary</th>',
+                            '<th>Company</th>',
+                        '</tr></thead>',
+                        '<tbody><tpl for=".">',
+                            '<tr>',
+                                '<td>{data.first_name}</td>',
+                                '<td>{data.last_name}</td>',
+                                '<td>{data.salary}</td>',
+                                '<td>{data.company.name}</td>',
+                            '</tr>',
+                        '</tpl></tbody>',
+                    '</table>',
+                    {compiled: true}
+                );
+
+                var infoTpl = Ext.create('Ext.XTemplate',
+                    '<div>page: {page}/{totalPages}</div>',
+                    '<div>{first} - {last} of {totalCount}</div>',
+                    {compiled: true}
+                );
+
+                var store = Ext.create('Ext.data.Store', {
+                    autoLoad: true,
+                    pageSize: 10,
+                    model: 'Employee'
+                });
+
+                store.on('load', function() {
+                    gridTpl.overwrite('grid', store.getRange());
+                    infoTpl.overwrite('info', {
+                        page: store.currentPage,
+                        totalCount: store.getTotalCount(),
+                        totalPages: Math.ceil(store.getTotalCount() / store.pageSize),
+                        last: store.currentPage * store.pageSize,
+                        first: store.currentPage * store.pageSize - store.pageSize + 1,
+                    });
+                });
+
+            });
+
+        </script>
+
+    </body>
+</html>
