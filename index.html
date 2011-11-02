@@ -104,6 +104,18 @@ employee.save({
                         </div>
                         <div id="model-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/model.html">example</a>
+                            <p>Define the model</p>
+                            <pre>App.Employee = SC.Record.extend({
+  primaryKey: 'id',
+
+  firstName: SC.Record.attr(String),
+  lastName: SC.Record.attr(String),
+  salary: SC.Record.attr(Number)
+});</pre>
+                            <p>Load an employee with id = 1</p>
+                            <pre></pre>
+                            <p>Update and save employee data</p>
+                            <pre></pre>
                         </div>
                     </div>
                 </div>
