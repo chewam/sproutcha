@@ -86,7 +86,7 @@
     proxy: {
         type: 'rest',
         reader: {root: 'objects'},
-        url: 'http://192.168.1.24:9876/api/v1/employee'
+        url: 'http://demo.revolunet.com:9876/api/v1/employee'
     },
     fields: ['id', 'first_name', 'last_name', 'salary']
 });</pre>
@@ -138,7 +138,7 @@ employee.save({
             totalProperty: 'meta.total_count'
         },
         startParam: 'offset',
-        url: 'http://192.168.1.24:9876/api/v1/employee'
+        url: 'http://demo.revolunet.com:9876/api/v1/employee'
     },
     fields: ['id', 'first_name', 'last_name', 'salary', 'company']
 });</pre>
