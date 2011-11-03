@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sproutcha :: store & templates :: sproutcore</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.7rc2.min.js" type="text/javascript"></script>
+    <script src="assets/sproutcore.js" type="text/javascript"></script>
+    <script src="assets/sproutcore-datastore.js" type="text/javascript"></script>
+    <script src="assets/sproutcore-sparsearray.js" type="text/javascript"></script>
+
+    <style>
+      .container {
+        width: 480px;
+        margin-top: 20px;
+      }
+
+      .pagination {
+        margin: 0;
+      }
+
+      .toolbar {
+        width: 100%;
+        margin-top: 5px;
+        display: -moz-box;
+        display: -webkit-box;
+      }
+
+      #info {
+        -moz-box-flex: 1;
+        -webkit-box-flex: 1;
+      }
+
+      #info div {
+        font-size: .9em;
+        text-align: right;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <script type="text/x-handlebars">
+      <div class="container">
+        <div id="grid">
+          <table class="zebra-striped">
+            <thead><tr>
+              <th>First name</th>
+              <th>Last Name</th>
+              <th>Salary</th>
+              <th>Company</th>
+            </tr></thead>
+            {{#collection contentBinding="App.Employees" tagName="tbody"}}
+              <td>{{content.first_name}}</td>
+              <td>{{content.last_name}}</td>
+              <td>{{content.salary}}</td>
+              <td>{{content.company.name}}</td>
+            {{/collection}}
+          </table>
+        </div>
+        <div class="toolbar">
+          <div class="pagination">
+            <ul>
+              {{#view App.PreviousButton}}<a href="#">&larr; Previous</a>{{/view}}
+              {{#view App.NextButton}}<a href="#">Next &rarr;</a>{{/view}}
+            </ul>
+          </div>
+          {{#view contentBinding="App.Employees" elementId="info"}}
+            <div>page: {{content.page}}/{{content.totalPages}}</div>
+            <div>{{content.rangeStartOne}} - {{content.rangeStop}} of {{content.total}}</div>
+          {{/view}}
+        </div>
+      </div>
+    </script>
+
+    <script type="text/javascript">
+      App = SC.Application.create({
+        store: SC.Store.create().from('App.DataSource'),
+
+        ready: function() {
+          this._super();
+          App.Employees.set('contentObjects',
+            App.store.find(SC.Query.remote(App.Employee)));
+        }
+      });
+
+      App.DataSource = SC.DataSource.extend({
+        fetch: function(store, query){
+          store.loadQueryResults(query, SC.SparseArray.create({
+            delegate: this,
+            store: store,
+            query: query,
+            rangeWindowSize: 30
+          }));
+          return true;
+        },
+      
+        sparseArrayDidRequestLength: function(sparseArray) {
+          return this.sparseArrayDidRequestRange(sparseArray, {start: 0, length: sparseArray.get('rangeWindowSize')});
+        },
+
+        sparseArrayDidRequestRange: function(sparseArray, range) {
+          if (this._request) {
+            this._request.abort();
+          }
+          this._request = $.ajax('http://demo.revolunet.com:9876/api/v1/employee', {
+            context: this,
+            contentType: 'application/json',
+            data: {offset: range.start, limit:range.length},
+            success: function(data) {
+              this.didFetchRecords(data, sparseArray, range);
+            },
+            error: this.errorFetchRecords
+          });
+        },
+      
+        didFetchRecords: function(data, sparseArray, range) {
+          data.objects.forEach(function(employee) {
+            sparseArray.get('store').loadRecord(App.Company, employee.company);
+            employee.company = employee.company.id;
+          });
+          var storeKeys = sparseArray.get('store')
+            .loadRecords(sparseArray.getPath('query.recordType'), data.objects);
+          sparseArray.provideLength(data.meta.total_count);  
+          sparseArray.provideObjectsInRange(range, storeKeys);
+          sparseArray.rangeRequestCompleted(range.start);
+        },
+      
+        errorFetchRecords: function(error) {
+          SC.Logger.log('Do somephing about errors');
+        }
+      });
+          
+      App.Employee = SC.Record.extend({
+        primaryKey: 'id',
+
+        first_name: SC.Record.attr(String),
+        last_name: SC.Record.attr(String),
+        salary: SC.Record.attr(Number),
+        company: SC.Record.toOne('App.Company', {isMaster: true})
+      });
+
+      App.Company = SC.Record.extend({
+        primaryKey: 'id',
+        name: SC.Record.attr(String)
+      });
+
+      App.Employees = SC.ArrayProxy.create({
+        rangeStart: 0,
+        rangeWindowSize: 10,
+        totalBinding: '.contentObjects.length',
+
+        contentObjects: [],
+
+        rangeStop: function() {
+          var rangeStop = this.get('rangeStart') + this.get('rangeWindowSize'),
+          length = this.get('total');
+          if (rangeStop < length) {
+            return rangeStop;
+          }
+          return length;
+        }.property('rangeStart', 'rangeWindowSize', 'total').cacheable(),
+
+        hasPrevious: function() {
+          return this.get('rangeStart') > 0;
+        }.property('rangeStart').cacheable(),
+        
+        hasNext: function() {
+          return this.get('rangeStop') < this.get('total');
+        }.property('rangeStop', 'total').cacheable(),
+
+        pageDidChange: function(array, key) {
+          var content = this.get('contentObjects').slice(this.get('rangeStart'), this.get('rangeStop'));
+          var contentLength = content.get('length'),
+              contentFirstObject = content.get('firstObject');
+          if (contentLength > 0 && !SC.none(contentFirstObject)) {
+            SC.run.schedule('sync', this, function() {
+              this.set('content', content);
+            });
+          }
+        }.observes('contentObjects.@each', 'rangeStop'),
+        
+        next: function() {
+          if (this.get('hasNext')) {
+            this.incrementProperty('rangeStart', this.get('rangeWindowSize'));
+          }
+        },
+          
+        previous: function() {
+          if (this.get('hasPrevious')) {
+            this.decrementProperty('rangeStart', this.get('rangeWindowSize'));
+          }
+        },
+
+        rangeStartOne: function() {
+          return this.get('rangeStart') + 1;
+        }.property('rangeStart').cacheable(),
+
+        page: function() {
+          return (this.get('rangeStart') / this.get('rangeWindowSize')) + 1;
+        }.property('rangeStart', 'rangeWindowSize').cacheable(),
+
+        totalPages: function() {
+          return Math.ceil(this.get('total') / this.get('rangeWindowSize'));
+        }.property('total', 'rangeWindowSize').cacheable()
+      });
+
+      App.Button = SC.Button.extend({
+        tagName: 'li',
+        type: null,
+        targetBinding: 'App.Employees',
+        classNameBindings: ['disabled'],
+        click: function(evt) {
+          evt.preventDefault();
+        }
+      });
+
+      App.PreviousButton = App.Button.extend({
+        classNames: ['prev'],
+        action: 'previous',
+        disabledBinding: SC.Binding.not('target.hasPrevious')
+      });
+
+      App.NextButton = App.Button.extend({
+        classNames: ['next'],
+        action: 'next',
+        disabledBinding: SC.Binding.not('target.hasNext')
+      });
+    </script>
+    </body>
+</html>
