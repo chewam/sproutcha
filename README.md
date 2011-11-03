@@ -4,7 +4,7 @@ SPROUTCHA
 The SproutCha aim:
 --------------------
 
-Compare javascript libraries thanks to small examples illustrating some imporant features of these frameworks.
+Compare javascript libraries thanks to small examples illustrating some imporant features of these frameworks.  
 At the moment the comparison applies only to SproutCore and Sencha frameworks, other frameworks are coming soon...
 
 The SproutCha rules:
