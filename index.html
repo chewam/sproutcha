@@ -13,6 +13,9 @@
                 margin: 0;
                 padding: 30px 0 0 0;
             }
+            p {
+                text-align: justify;
+            }
             h1 {
                 margin-bottom: 30px;
             }
@@ -47,6 +50,7 @@
             }
             .btn.success.pull-right {
                 top: -12px;
+                margin: 5px 0 0 20px;
                 position: relative;
             }
         </style>
@@ -83,9 +87,48 @@
                     <div class="pill-content">
                         <div class="active" id="class-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/class.html">example</a>
+                            <p>A Person class is created. In the config object a list of configuration options with their default values, for which automatically accessor methods are generated. The method initconfig automatically updates the values of the config attributes.</p>
+                            <div style="clear: both;"></div>
+                            <pre>Ext.define('My.Person', {
+    id: null,
+    config: {
+        firstName: null,
+        lastName: null
+    },
+    constructor: function(config) {
+        this.initConfig(config);
+        return this;
+    }
+});
+
+var person = Ext.create('My.Person', {
+    firstName: 'John',
+    lastName: 'Smith'
+});
+
+person.getFirstName() // John</pre>
+                            <p>An Employee class extends the Person class. ExtJS class can have static methods.</p>
+                            <pre>Ext.define('My.Employee', {
+    extend: 'My.Person',
+    statics: {
+        internalId: 0
+    },
+    constructor: function() {
+        this.callParent(arguments);
+        this.id = ++this.self.internalId;
+        return this;
+    }
+});
+
+var employee1 = Ext.create('My.Employee', {...});
+var employee2 = Ext.create('My.Employee', {...});
+
+employee1.id // 1
+employee2.id // 2</pre>
                         </div>
-                        <div id="model-sproutcore">
+                        <div id="class-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
+                            <div style="clear: both;"></div>
                         </div>
                     </div>
                 </div>
@@ -111,6 +154,7 @@
                         <div class="active" id="model-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/model.html">example</a>
                             <p>Define the model</p>
+                            <div style="clear: both;"></div>
                             <pre>Ext.define('Employee', {
     extend: 'Ext.data.Model',
     proxy: {
@@ -133,6 +177,7 @@ employee.save({
                         <div id="model-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/model.html">example</a>
                             <p>Define the store</p>
+                            <div style="clear: both;"></div>
                             <pre>App = SC.Application.create({
   store: SC.Store.create().from('App.DataSource')
 });</pre>
@@ -182,6 +227,7 @@ employee.save({
                         <div class="active" id="store-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/store.html">example</a>
                             <p>Define the model</p>
+                            <div style="clear: both;"></div>
                             <pre>Ext.define('Employee', {
     extend: 'Ext.data.Model',
     proxy: {
@@ -209,6 +255,7 @@ store.previousPage();</pre>
                         </div>
                         <div id="store-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/store.html">example</a>
+                            <div style="clear: both;"></div>
                         </div>
                     </div>
                 </div>
