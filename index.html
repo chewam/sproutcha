@@ -11,7 +11,10 @@
         <style>
             body {
                 margin: 0;
-                padding: 10px 0 0 0;
+                padding: 30px 0 0 0;
+            }
+            h1 {
+                margin-bottom: 30px;
             }
             pre {
                 color: #195F91;
@@ -22,7 +25,7 @@
                 position: relative;
             }
             .page-header {
-                margin-top: 17px;
+                margin-top: 30px;
             }
             .box {
                 padding: 10px 20px 20px;
@@ -60,6 +63,33 @@
             <p>The aim of this project is to compare the libraries <a target="_blank" href="http://www.sproutcore.com/">SproutCore</a> and <a  target="_blank" href="http://www.sencha.com/">Sencha</a>. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.</p>
             <p>Because SproutCore 2 does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library <a href="twitter.github.com/bootstrap/">Bootsrap, from Twitter</a>.</p>
             <p>Note that the comparison is not exclusively for SproutCore and Sencha, feel free to provide examples based on other libraries on <a  target="_blank" href="http://github.com/goldledoigt/sproutcha">GitHub</a>.</p>
+
+            <!-- CLASS -->
+
+            <div class="page-header"><h2>Class <small>playing with class</small></h2></div>
+            <div class="row">
+                <div class="span6">
+                    <img class="thumbnail" src="img/class.png" alt="class">
+                </div>
+                <div class="span10">
+                    <p>In this example a class is created and extended with statics, getters and setters.</p>
+
+                    <!-- TABS -->
+
+                    <ul class="tabs">
+                        <li class="active"><a href="#class-sencha">ExtJS 4</a></li>
+                        <li><a href="#class-sproutcore">SproutCore 2</a></li>
+                    </ul>
+                    <div class="pill-content">
+                        <div class="active" id="class-sencha">
+                            <a class="btn success pull-right" target="_blank" href="examples/extjs/class.html">example</a>
+                        </div>
+                        <div id="model-sproutcore">
+                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- MODEL -->
 
