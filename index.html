@@ -11,7 +11,13 @@
         <style>
             body {
                 margin: 0;
-                padding: 10px 0 0 0;
+                padding: 30px 0 0 0;
+            }
+            p {
+                text-align: justify;
+            }
+            h1 {
+                margin-bottom: 30px;
             }
             pre {
                 color: #195F91;
@@ -22,7 +28,7 @@
                 position: relative;
             }
             .page-header {
-                margin-top: 17px;
+                margin-top: 30px;
             }
             .box {
                 padding: 10px 20px 20px;
@@ -44,6 +50,7 @@
             }
             .btn.success.pull-right {
                 top: -12px;
+                margin: 5px 0 0 20px;
                 position: relative;
             }
         </style>
@@ -58,8 +65,74 @@
             </div>
             <h1><span class="sproutcore">SproutCore</span> vs <span class="sencha">Sencha</span> <small>vs whatever...</small></h1>
             <p>The aim of this project is to compare the libraries <a target="_blank" href="http://www.sproutcore.com/">SproutCore</a> and <a  target="_blank" href="http://www.sencha.com/">Sencha</a>. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.</p>
-            <p>Because SproutCore 2 does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library <a href="twitter.github.com/bootstrap/">Bootsrap, from Twitter</a>.</p>
+            <p>Because SproutCore 2 does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library <a href="twitter.github.com/bootstrap/">Bootstrap, from Twitter</a>.</p>
             <p>Note that the comparison is not exclusively for SproutCore and Sencha, feel free to provide examples based on other libraries on <a  target="_blank" href="http://github.com/goldledoigt/sproutcha">GitHub</a>.</p>
+
+            <!-- CLASS -->
+
+            <div class="page-header"><h2>Class <small>playing with class</small></h2></div>
+            <div class="row">
+                <div class="span6">
+                    <img class="thumbnail" src="img/class.png" alt="class">
+                </div>
+                <div class="span10">
+                    <p>In this example a class is created and extended with statics, getters and setters.</p>
+
+                    <!-- TABS -->
+
+                    <ul class="tabs">
+                        <li class="active"><a href="#class-sencha">ExtJS 4</a></li>
+                        <li><a href="#class-sproutcore">SproutCore 2</a></li>
+                    </ul>
+                    <div class="pill-content">
+                        <div class="active" id="class-sencha">
+                            <a class="btn success pull-right" target="_blank" href="examples/extjs/class.html">example</a>
+                            <p>A Person class is created. In the config object a list of configuration options with their default values, for which automatically accessor methods are generated. The method initconfig automatically updates the values of the config attributes.</p>
+                            <div style="clear: both;"></div>
+                            <pre>Ext.define('My.Person', {
+    id: null,
+    config: {
+        firstName: null,
+        lastName: null
+    },
+    constructor: function(config) {
+        this.initConfig(config);
+        return this;
+    }
+});
+
+var person = Ext.create('My.Person', {
+    firstName: 'John',
+    lastName: 'Smith'
+});
+
+person.getFirstName() // John</pre>
+                            <p>An Employee class extends the Person class. ExtJS class can have static methods.</p>
+                            <pre>Ext.define('My.Employee', {
+    extend: 'My.Person',
+    statics: {
+        internalId: 0
+    },
+    constructor: function() {
+        this.callParent(arguments);
+        this.id = ++this.self.internalId;
+        return this;
+    }
+});
+
+var employee1 = Ext.create('My.Employee', {...});
+var employee2 = Ext.create('My.Employee', {...});
+
+employee1.id // 1
+employee2.id // 2</pre>
+                        </div>
+                        <div id="class-sproutcore">
+                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- MODEL -->
 
@@ -81,6 +154,7 @@
                         <div class="active" id="model-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/model.html">example</a>
                             <p>Define the model</p>
+                            <div style="clear: both;"></div>
                             <pre>Ext.define('Employee', {
     extend: 'Ext.data.Model',
     proxy: {
@@ -92,19 +166,18 @@
 });</pre>
                             <p>Load an employee with id = 1</p>
                             <pre>Employee.load(1, {
-    success: function (employee) {
-        ...
-    }
+    success: function (employee) {...}
 });</pre>
                             <p>Update and save employee data</p>
                             <pre>employee.set(data);
 employee.save({
-    success: ...
+    success: function (employee) {...}
 });</pre>
                         </div>
                         <div id="model-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/model.html">example</a>
                             <p>Define the store</p>
+                            <div style="clear: both;"></div>
                             <pre>App = SC.Application.create({
   store: SC.Store.create().from('App.DataSource')
 });</pre>
@@ -154,6 +227,7 @@ employee.save({
                         <div class="active" id="store-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/store.html">example</a>
                             <p>Define the model</p>
+                            <div style="clear: both;"></div>
                             <pre>Ext.define('Employee', {
     extend: 'Ext.data.Model',
     proxy: {
@@ -181,6 +255,7 @@ store.previousPage();</pre>
                         </div>
                         <div id="store-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/store.html">example</a>
+                            <div style="clear: both;"></div>
                         </div>
                     </div>
                 </div>
