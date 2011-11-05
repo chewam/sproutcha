@@ -297,7 +297,73 @@ store.previousPage();</pre>
                         </div>
                         <div id="store-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/store.html">example</a>
+                            <p>Create and load store</p>
                             <div style="clear: both;"></div>
+                            <pre>App = SC.Application.create({
+  store: SC.Store.create().from('App.DataSource'),
+
+  ready: function() {
+    this._super();
+    App.Employees.set('contentObjects',
+      App.store.find(SC.Query.remote(App.Employee)));
+  }
+});</pre>
+                            <p>Define sparse data source</p>
+                            <pre>App.DataSource = SC.DataSource.extend({
+  fetch: function(store, query) {
+    store.loadQueryResults(query, SC.SparseArray.create({
+      delegate: this,
+      store: store,
+      query: query,
+      rangeWindowSize: 30
+    }));
+    return true;
+  },
+
+  sparseArrayDidRequestLength: function(sparseArray) {
+    return this.sparseArrayDidRequestRange(sparseArray, {start: 0, length: sparseArray.get('rangeWindowSize')});
+  }
+});</pre>
+                            <p>Define the model</p>
+                            <pre>App.Employee = SC.Record.extend({
+  primaryKey: 'id',
+
+  first_name: SC.Record.attr(String),
+  last_name: SC.Record.attr(String),
+  salary: SC.Record.attr(Number),
+  company: SC.Record.toOne('App.Company', {isMaster: true})
+});
+
+App.Company = SC.Record.extend({
+  primaryKey: 'id',
+  name: SC.Record.attr(String)
+});</pre>
+                            <p>Define the data proxy</p>
+                            <pre>App.Employees = SC.ArrayProxy.create({
+  rangeStart: 0,
+  rangeWindowSize: 10,
+  totalBinding: '.contentObjects.length',
+
+  rangeStop: function() {
+    var rangeStop = this.get('rangeStart') + this.get('rangeWindowSize'),
+        length = this.get('total');
+    if (rangeStop < length) {
+      return rangeStop;
+    }
+    return length;
+  }.property('rangeStart', 'rangeWindowSize', 'total').cacheable(),
+
+  page: function() {
+    return (this.get('rangeStart') / this.get('rangeWindowSize')) + 1;
+  }.property('rangeStart', 'rangeWindowSize').cacheable(),
+
+  totalPages: function() {
+    return Math.ceil(this.get('total') / this.get('rangeWindowSize'));
+  }.property('total', 'rangeWindowSize').cacheable()
+});</pre>
+                            <p>Change store page</p>
+                            <pre>App.Employees.nextPage();
+App.Employees.previousPage();</pre>
                         </div>
                     </div>
                 </div>
