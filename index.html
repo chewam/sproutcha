@@ -318,10 +318,6 @@ store.previousPage();</pre>
       rangeWindowSize: 30
     }));
     return true;
-  },
-
-  sparseArrayDidRequestLength: function(sparseArray) {
-    return this.sparseArrayDidRequestRange(sparseArray, {start: 0, length: sparseArray.get('rangeWindowSize')});
   }
 });</pre>
                             <p>Define the model</p>
