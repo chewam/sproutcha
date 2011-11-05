@@ -92,7 +92,7 @@
             </div>
           </fieldset>
         {{/view}}
-        {{#collection contentBinding="App.Employees" elementId="grid"}}
+        {{#collection contentBinding="App.Employee.all" elementId="grid"}}
           {{#view App.Button classNames="close" tagName="div" targetBinding="content" action="close"}}x{{/view}}
           <div>id: {{content.id}}</div>
           <div>name: {{content.fullName}}</div>
@@ -117,7 +117,7 @@
         salary: 0,
 
         id: function() {
-          return ++App.Employee.internalId;
+          return ++this.constructor.internalId;
         }.property().cacheable(),
 
         fullName: function() {
@@ -125,10 +125,10 @@
         }.property('firstName', 'lastName').cacheable(),
 
         add: function() {
-          App.Employees.pushObject(this);
+          this.constructor.all.pushObject(this);
         },
         close: function() {
-          App.Employees.removeObject(this);
+          this.constructor.all.removeObject(this);
         },
         less: function() {
           this.decrementProperty('salary', 100);
@@ -139,13 +139,15 @@
       });
 
       App.Employee.reopenClass({
-        internalId: 0
+        internalId: 0,
+        all: SC.ArrayProxy.create({content:[]}),
+
+        add: function(properties) {
+          return this.create(properties).add();
+        }
       });
 
-      App.Employees = SC.ArrayProxy.create({
-        content: []
-      });
-
+      // Views ************************************************
       App.Form = SC.View.extend({
         tagName: 'form',
 
@@ -174,17 +176,19 @@
         value: null
       });
 
-      App.Employee.create({
+      // Content ************************************************
+
+      App.Employee.add({
         firstName: 'John',
         lastName: 'Smith',
         salary: 1000
-      }).add();
+      });
 
-      App.Employee.create({
+      App.Employee.add({
         firstName: 'Steve',
         lastName: 'Brown',
         salary: 42000
-      }).add();
+      });
     </script>
     </body>
 </html>

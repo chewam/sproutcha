@@ -128,7 +128,49 @@ employee2.id // 2</pre>
                         </div>
                         <div id="class-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
+                            <p>A Person class is created with properties `firstName` and `lastName`.</p>
                             <div style="clear: both;"></div>
+                            <pre>App.Person = SC.Object.extend({
+  firstName: '',
+  lastName: ''
+});
+
+var person = App.Person.create({
+  firstName: 'John',
+  lastName: 'Smith'
+});
+
+person.get('firstName') // John</pre>
+                            <p>An Employee class extends the Person class. Sproutcore class can have static methods. `fullName` and `id` are computed properties. Methods `less` and `more` make use of `decrementProperty` and `incrementProperty` helpers.</p>
+                            <pre>App.Employee = App.Person.extend({
+  salary: 0,
+
+  id: function() {
+    return ++App.Employee.internalId;
+  }.property().cacheable(),
+
+  fullName: function() {
+    return "%@ %@".fmt(this.get('firstName'), this.get('lastName'));
+  }.property('firstName', 'lastName').cacheable(),
+
+  less: function() {
+    this.decrementProperty('salary', 100);
+  },
+
+  more: function() {
+    this.incrementProperty('salary', 100);
+  }
+});
+
+App.Employee.reopenClass({
+  internalId: 0
+});
+
+var employee1 = App.Employee.create({...});
+var employee2 = App.Employee.create({...});
+
+employee1.get('id') // 1
+employee2.get('id') // 2</pre>
                         </div>
                     </div>
                 </div>
