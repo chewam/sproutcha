@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>sproutcha :: store :: sproutcore</title>
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
     <script src="http://code.jquery.com/jquery-1.7rc2.min.js" type="text/javascript"></script>
     <script src="assets/sproutcore.js" type="text/javascript"></script>
     <script src="assets/sproutcore-datastore.js" type="text/javascript"></script>
@@ -88,7 +88,7 @@
       });
 
       App.DataSource = SC.DataSource.extend({
-        fetch: function(store, query){
+        fetch: function(store, query) {
           store.loadQueryResults(query, SC.SparseArray.create({
             delegate: this,
             store: store,
@@ -183,13 +183,13 @@
           }
         }.observes('contentObjects.@each', 'rangeStop'),
         
-        next: function() {
+        nextPage: function() {
           if (this.get('hasNext')) {
             this.incrementProperty('rangeStart', this.get('rangeWindowSize'));
           }
         },
           
-        previous: function() {
+        previousPage: function() {
           if (this.get('hasPrevious')) {
             this.decrementProperty('rangeStart', this.get('rangeWindowSize'));
           }
@@ -220,13 +220,13 @@
 
       App.PreviousButton = App.Button.extend({
         classNames: ['prev'],
-        action: 'previous',
+        action: 'previousPage',
         disabledBinding: SC.Binding.not('target.hasPrevious')
       });
 
       App.NextButton = App.Button.extend({
         classNames: ['next'],
-        action: 'next',
+        action: 'nextPage',
         disabledBinding: SC.Binding.not('target.hasNext')
       });
     </script>

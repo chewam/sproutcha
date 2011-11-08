@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sproutcha :: store :: sproutcore</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.7rc2.min.js" type="text/javascript"></script>
+    <script src="assets/sproutcore.js" type="text/javascript"></script>
+
+    <style>
+      .container {
+          width: 480px;
+      }
+
+      form {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-radius: 5px;
+          border: 1px solid #DDD;
+      }
+
+      fieldset {
+          margin-bottom: 0;
+      }
+
+      .actions {
+          text-align: right;
+          margin-bottom: 0px;
+          background-color: transparent;
+      }
+
+      #grid .btn {
+          padding: 0px 6px 2px; margin-left: 4px;
+      }
+
+      #grid > div {
+          border: 1px solid #DDD;
+          border-radius: 5px;
+          float: left;
+          width: 208px;
+          margin: 5px;
+          padding: 10px;
+      }
+
+      .salary {
+          display: -moz-box;
+          display: -webkit-box;
+          width: 100%;
+      }
+
+      .salary > div {
+          -moz-box-flex: 1;
+          -webkit-box-flex: 1;
+      }
+
+      .close {
+          cursor: pointer;
+          font-size: 18px;
+          left: 4px;
+          position: relative;
+          top: -7px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <script type="text/x-handlebars">
+      <div class="container">
+        {{#view App.Form}}
+          <fieldset>
+            <legend>Employee</legend>
+            <div class="clearfix">
+              <label for="firstName">First name</label>
+              <div class="input">
+                {{view App.TextField valueBinding="content.firstName" elementId="firstName"}}
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for="lastName">Last name</label>
+              <div class="input">
+                {{view App.TextField valueBinding="content.lastName" elementId="lastName"}}
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for="salary">Salary</label>
+              <div class="input">
+                {{view App.TextField type="number" min="0" valueBinding="content.salary" elementId="salary"}}
+              </div>
+            </div>
+            <div class="actions">
+              {{view App.Button tagName="input" type="submit" value="Create"}}
+            </div>
+          </fieldset>
+        {{/view}}
+        {{#collection contentBinding="App.Employee.all" elementId="grid"}}
+          {{#view App.Button classNames="close" tagName="div" targetBinding="content" action="close"}}x{{/view}}
+          <div>id: {{content.id}}</div>
+          <div>name: {{content.fullName}}</div>
+          <div class="salary">
+            <div>salary: {{content.salary}}</div>
+            {{#view App.Button targetBinding="content" action="less"}}-{{/view}}
+            {{#view App.Button targetBinding="content" action="more"}}+{{/view}}
+          </div>
+        {{/collection}}
+      </div>
+    </script>
+
+    <script type="text/javascript">
+      App = SC.Application.create();
+
+      App.Person = SC.Object.extend({
+        firstName: '',
+        lastName: ''
+      });
+
+      App.Employee = App.Person.extend({
+        salary: 0,
+
+        id: function() {
+          return ++this.constructor.internalId;
+        }.property().cacheable(),
+
+        fullName: function() {
+          return "%@ %@".fmt(this.get('firstName'), this.get('lastName'));
+        }.property('firstName', 'lastName').cacheable(),
+
+        add: function() {
+          this.constructor.all.pushObject(this);
+        },
+        close: function() {
+          this.constructor.all.removeObject(this);
+        },
+        less: function() {
+          this.decrementProperty('salary', 100);
+        },
+        more: function() {
+          this.incrementProperty('salary', 100);
+        }
+      });
+
+      App.Employee.reopenClass({
+        internalId: 0,
+        all: SC.ArrayProxy.create({content:[]}),
+
+        add: function(properties) {
+          return this.create(properties).add();
+        }
+      });
+
+      // Views ************************************************
+      App.Form = SC.View.extend({
+        tagName: 'form',
+
+        init: function() {
+          this._super();
+          this.set('content', App.Employee.create());
+        },
+
+        submit: function(evt) {
+          evt.preventDefault();
+          this.get('content').add();
+
+          this.set('content', App.Employee.create());
+        }
+      });
+
+      App.TextField = SC.TextField.extend({
+        classNames: ['xlarge'],
+        attributeBindings: ['required'],
+        required: true
+      });
+
+      App.Button = SC.Button.extend({
+        classNames: ['btn'],
+        attributeBindings: ['value'],
+        value: null
+      });
+
+      // Content ************************************************
+
+      App.Employee.add({
+        firstName: 'John',
+        lastName: 'Smith',
+        salary: 1000
+      });
+
+      App.Employee.add({
+        firstName: 'Steve',
+        lastName: 'Brown',
+        salary: 42000
+      });
+    </script>
+    </body>
+</html>
