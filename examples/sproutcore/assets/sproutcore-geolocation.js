@@ -119,6 +119,8 @@ SC.GeoLocation = SC.Object.extend({
    */
   isSupported: ('geolocation' in window.navigator),
 
+  hasLocationBinding: SC.Binding.bool('timestamp'),
+
   init: function() {
     this._super();
     this._provider = this._provider ||
@@ -199,6 +201,7 @@ SC.GeoLocation = SC.Object.extend({
       accuracy: position.coords.accuracy,
       altitude: position.coords.altitude,
       altitudeAccuracy: position.coords.altitudeAccuracy,
+      // set status
       isError: false,
       errorObject: null,
       //google doesn't provide these two
