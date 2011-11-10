@@ -365,6 +365,52 @@ App.Employees.previousPage();</pre>
                 </div>
             </div>
 
+
+            <!-- GEOLOCATION -->
+
+            <div class="page-header"><h2>GeoLocation <small>grab your position</small></h2></div>
+            <div class="row">
+                <div class="span6">
+                    <img class="thumbnail" src="img/geolocation.png" alt="geolocation">
+                </div>
+                <div class="span10">
+                    <p>In this example a geolocation is grabbed from the browser.</p>
+
+                    <!-- TABS -->
+
+                    <ul class="tabs">
+                        <li class="active"><a href="#geolocation-sencha">ExtJS 4</a></li>
+                        <li><a href="#geolocation-sproutcore">SproutCore 2</a></li>
+                    </ul>
+                    <div class="pill-content">
+                        <div class="active" id="geolocation-sencha">
+                            <a class="btn success pull-right" target="_blank" href="examples/extjs/geolocation.html">example</a>
+                        </div>
+                        <div id="geolocation-sproutcore">
+                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/geolocation.html">example</a>
+                            <p>Initialize a GeoLocation</p>
+                            <div style="clear: both;"></div>
+                            <pre>App.currentLocation = SC.GeoLocation.create({autoUpdate: false});</pre>
+                            <p>Update geolocation on button click</p>
+                            <pre>{{#view SC.Button target="App.currentLocation" action="updateLocation"}}
+  Update
+{{/view}}</pre>
+                            <p>Show result</p>
+                            <pre>{{#if App.currentLocation.hasLocation}}
+  {{App.currentLocation.latitude}}
+  {{App.currentLocation.longitude}}
+{{/if}}</pre>
+                            <p>Show errors</p>
+                            <pre>{{#if App.currentLocation.isError}}
+  {{App.currentLocation.errorObject.message}}
+{{/if}}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
 
         <footer class="footer">

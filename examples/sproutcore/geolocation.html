@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sproutcha :: geolocation :: sproutcore</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="assets/sproutcore.js" type="text/javascript"></script>
+    <script src="assets/sproutcore-geolocation.js" type="text/javascript"></script>
+
+    <style>
+      .container {
+          width: 480px;
+      }
+
+      form {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-radius: 5px;
+          border: 1px solid #DDD;
+      }
+
+      fieldset {
+          margin-bottom: 0;
+      }
+
+      .actions {
+          text-align: right;
+          margin-bottom: 0px;
+          background-color: transparent;
+      }
+
+      .alert-message {
+        margin-right: 20px;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <script type="text/x-handlebars">
+      <div class="container">
+        <form>
+          <fieldset>
+            <legend>Current Location</legend>
+            {{#if App.currentLocation.hasLocation}}
+              <div class="alert-message block-message success">
+                <div class="clearfix">
+                  <label>Latitude : </label> {{App.currentLocation.latitude}}
+                </div>
+                <div class="clearfix">
+                  <label>Longitude : </label> {{App.currentLocation.longitude}}
+                </div>
+                <div class="clearfix">
+                  <label>Altitude : </label> {{App.currentLocation.altitude}}
+                </div>
+              </div>
+            {{else}}
+              {{#if App.currentLocation.isError}}
+                <div class="alert-message block-message error">
+                  <p><strong>{{App.currentLocation.errorObject.message}}</strong></p>
+                </div>
+              {{else}}
+                <div class="alert-message block-message info">
+                  <p><strong>Click on the button to grab your current location</strong></p>
+                </div>
+              {{/if}}
+            {{/if}}
+            <div class="actions">
+              {{#view SC.Button classNames="btn" target="App.currentLocation" action="updateLocation"}}Update{{/view}}
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </script>
+
+    <script type="text/javascript">
+      App = SC.Application.create();
+
+      App.currentLocation = SC.GeoLocation.create({autoUpdate: false});
+    </script>
+    </body>
+</html>
