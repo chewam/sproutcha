@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>sproutcha :: geolocation :: extjs</title>
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+        <script type="text/javascript" src="http://extjs.cachefly.net/ext-4.0.2a/ext-all-debug.js"></script>
+
+        <style>
+            .container {
+                width: 480px;
+            }
+
+            form {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-radius: 5px;
+                border: 1px solid #DDD;
+            }
+
+            fieldset {
+                margin-bottom: 0;
+            }
+
+            .actions {
+                text-align: right;
+                margin-bottom: 0px;
+                background-color: transparent;
+            }
+
+            .alert-message {
+                margin-right: 20px;
+                margin-left: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <form>
+                <fieldset>
+                    <legend>Current Location</legend>
+                    <div id="info">
+                        <div class="alert-message block-message info">
+                            <p><strong>Click on the button to grab your current location</strong></p>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn">Update</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <script type="text/javascript">
+
+            Ext.define('Geolocation', {
+                singleton: true,
+                isSupported: function() {
+                    return Ext.supports.GeoLocation;
+                },
+                getLocation: function(callback) {
+                    var me = this;
+                    navigator.geolocation.getCurrentPosition(function(geoposition) {
+                        if (callback) callback.call(me, geoposition.coords);
+                    });
+                }
+            });
+
+            Ext.onReady(function() {
+
+                var errorTpl = Ext.create('Ext.Template',
+                    '<div class="alert-message block-message error">',
+                        '<p><strong>{message}</strong></p>',
+                    '</div>'
+                );
+
+                var locationTpl = Ext.create('Ext.Template',
+                    '<div class="alert-message block-message success">',
+                        '<div class="clearfix"><label>Latitude:</label>&nbsp;{latitude}</div>',
+                        '<div class="clearfix"><label>Longitude:</label>&nbsp;{longitude}</div>',
+                        '<div class="clearfix"><label>Altitude:</label>&nbsp;{altitude}</div>',
+                    '</div>'
+                );
+
+                Ext.select('button').on('click', function() {
+                    if (Geolocation.isSupported()) {
+                        Geolocation.getLocation(function(data) {
+                            locationTpl.overwrite('info', data);
+                        });
+                    } else {
+                        errorTpl.overwrite('info', {
+                            message: 'Geolocation is not supported by your web browser!'
+                        });
+                    }
+                });
+
+            });
+
+        </script>
+    </body>
+</html>

@@ -31,20 +31,15 @@
     </head>
 
     <body>
-
         <script type="text/javascript">
             Ext.Loader.setConfig({enabled:true});
 
             Ext.application({
-
                 name: 'MyApp',
-
                 appFolder: 'mvc',
-
                 controllers: ['EmployeeList'],
 
                 launch: function() {
-
                     Ext.create('Ext.container.Container', {
                         cls: 'container',
                         renderTo: document.body,
@@ -54,11 +49,8 @@
                             xtype: 'pagingToolbar'
                         }]
                     });
-
                 }
-
             });
         </script>
-
     </body>
 </html>
