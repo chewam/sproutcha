@@ -429,6 +429,75 @@ App.Employees.previousPage();</pre>
             </div>
 
 
+            <!-- MVC -->
+
+            <div class="page-header"><h2>MVC <small>use MVC pattern</small></h2></div>
+            <div class="row">
+                <div class="span6">
+                    <img class="thumbnail" src="img/store.png" alt="geolocation">
+                </div>
+                <div class="span10">
+                    <p>In this example an MVC pattern is designed for architecting our project.</p>
+
+                    <!-- TABS -->
+
+                    <ul class="tabs">
+                        <li class="active"><a href="#mvc-sencha">ExtJS 4</a></li>
+                        <li><a href="#mvc-sproutcore">SproutCore 2</a></li>
+                    </ul>
+                    <div class="pill-content">
+                        <div class="active" id="mvc-sencha">
+                            <a class="btn success pull-right" target="_blank" href="examples/extjs/mvc.html">example</a>
+                            <p>Define a model</p>
+                            <div style="clear: both;"></div>
+                            <pre>Ext.define('MyApp.model.Employee', {
+    extend: 'Ext.data.Model',
+    proxy: {...},
+    fields: [...]
+});</pre>
+                            <p>Define a data store</p>
+                            <pre>Ext.define('MyApp.store.Employees', {
+    extend: 'Ext.data.Store',
+    model: 'MyApp.model.Employee'
+});</pre>
+                            <p>Define views</p>
+                            <pre>Ext.define('MyApp.view.EmployeeList', {
+    store: 'Employees',
+    extend: 'Ext.view.View',
+    alias : 'widget.employeeList',
+    tpl: ...
+});
+
+Ext.define('MyApp.view.PagingToolbar', {
+    extend: 'Ext.Container',
+    alias : 'widget.pagingToolbar',
+    items: [...]
+});</pre>
+                            <p>Define a controller</p>
+                            <pre>Ext.define('MyApp.controller.EmployeeList', {
+    models: ['Employee'],
+    stores: ['Employees'],
+    views: ['EmployeeList', 'PagingToolbar'],
+    extend: 'Ext.app.Controller',
+    init: function() {...},
+});</pre>
+                        <p>Finally define an application, its name, its root folder and its controller</p>
+                        <pre>Ext.application({
+    name: 'MyApp',
+    appFolder: 'mvc',
+    controllers: ['EmployeeList'],
+    launch: function() {...}
+});</pre>
+                        </div>
+
+                        <div id="mvc-sproutcore">
+                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/mvc.html">example</a>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
 
