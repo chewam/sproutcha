@@ -385,6 +385,25 @@ App.Employees.previousPage();</pre>
                     <div class="pill-content">
                         <div class="active" id="geolocation-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/geolocation.html">example</a>
+                            <p>Define a singleton to ease the use of navigator.geolocation</p>
+                            <div style="clear: both;"></div>
+                            <pre>Ext.define('Geolocation', {
+    singleton: true,
+    isSupported: function() {...},
+    getLocation: function(callback) {...}
+});</pre>
+                            <p>Update geolocation on button click</p>
+                            <pre>Ext.select('button').on('click', function() {
+    if (Geolocation.isSupported()) {
+        Geolocation.getLocation(function(data) {...});
+    }
+});</pre>
+                            <p>Show result</p>
+                            <pre>locationTpl.overwrite('info', data);</pre>
+                            <p>Show errors</p>
+                            <pre>errorTpl.overwrite('info', {
+    message: 'Geolocation is not supported by your web browser!'
+});</pre>
                         </div>
                         <div id="geolocation-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/geolocation.html">example</a>
