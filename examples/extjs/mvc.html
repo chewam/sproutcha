@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>sproutcha :: mvc :: extjs</title>
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+        <script type="text/javascript" src="http://extjs.cachefly.net/ext-4.0.2a/ext-all-debug.js"></script>
+
+        <style>
+            div, table, tr, td, th {
+                outline: none;
+            }
+
+            .container {
+                width: 480px;
+                margin-top: 20px;
+            }
+
+            .info {
+                float: right;
+            }
+
+            .info div {
+                font-size: .9em;
+                text-align: right;
+            }
+
+            .x-clear {
+                clear: both;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script type="text/javascript">
+            Ext.Loader.setConfig({enabled:true});
+
+            Ext.application({
+                name: 'MyApp',
+                appFolder: 'mvc',
+                controllers: ['EmployeeList'],
+
+                launch: function() {
+                    Ext.create('Ext.container.Container', {
+                        cls: 'container',
+                        renderTo: document.body,
+                        items: [{
+                            xtype: 'employeeList'
+                        }, {
+                            xtype: 'pagingToolbar'
+                        }]
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>
