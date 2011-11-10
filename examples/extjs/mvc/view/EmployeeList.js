@@ -1,0 +1,26 @@
+Ext.define('MyApp.view.EmployeeList', {
+    store: 'Employees',
+    loadMask: false,
+    itemSelector: 'tbody > tr',
+    extend: 'Ext.view.View',
+    alias : 'widget.employeeList',
+    tpl: Ext.create('Ext.XTemplate',
+        '<table class="bordered-table zebra-striped">',
+            '<thead><tr>',
+                '<th>First name</th>',
+                '<th>Last Name</th>',
+                '<th>Salary</th>',
+                '<th>Company</th>',
+            '</tr></thead>',
+            '<tbody><tpl for=".">',
+                '<tr>',
+                    '<td>{first_name}</td>',
+                    '<td>{last_name}</td>',
+                    '<td>{salary}</td>',
+                    '<td>{company.name}</td>',
+                '</tr>',
+            '</tpl></tbody>',
+        '</table>',
+        {compiled: true}
+    )
+});
