@@ -72,7 +72,6 @@ SC.initializationQueue = SC.ExecutionQueue.create({
         this.run();
       },
       error: function(xhr, status) {
-        console.log(status);
         this.setProperties({
           isError: true,
           errorObject: xhr
