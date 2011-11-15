@@ -529,8 +529,9 @@ App.ToolbarView = SC.View.extend({
   queue: SC.initializationQueue,
   action: function() {
     if (this.get('isError')) {
-      throw SC.Error.create('Module Loading Error',
+      SC.Logger.error('Module Loading Error',
         this.getPath('errorObject.responseText'));
+      return;
     }
   }
 });

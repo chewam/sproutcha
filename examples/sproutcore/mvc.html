@@ -43,7 +43,8 @@
             queue: SC.initializationQueue,
             action: function() {
               if (this.get('isError')) {
-                throw SC.Error.create('Modules Loading Error', this.getPath('errorObject.responseText'));
+                SC.Logger.error('Modules Loading Error', this.getPath('errorObject.responseText'));
+                return;
               }
               /**
                * Create a View from the loaded template
