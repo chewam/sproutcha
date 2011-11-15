@@ -492,7 +492,51 @@ Ext.define('MyApp.view.PagingToolbar', {
 
                         <div id="mvc-sproutcore">
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/mvc.html">example</a>
+                            <p>Define a model</p>
                             <div style="clear: both;"></div>
+                            <pre>App.Employee = SC.Record.extend({
+  primaryKey: 'id',
+
+  first_name: SC.Record.attr(String),
+  last_name: SC.Record.attr(String),
+  salary: SC.Record.attr(Number),
+  company: SC.Record.toOne('App.Company', {isMaster: true})
+});</pre>
+                            <p>Define a data source</p>
+                            <pre>App.DataSource = SC.DataSource.extend({
+ fetch: function() {...}
+});</pre>
+                            <p>Define views</p>
+                            <pre>App.EmployeesListView = SC.CollectionView.extend({
+  contentBinding: 'App.Employees',
+  tagName: 'tbody'
+});
+
+App.ToolbarView = SC.View.extend({
+  classNames: ['toolbar'],
+  contentBinding: 'App.Employees'
+});</pre>
+                            <p>Define a controller</p>
+                            <pre>App.Employees = SC.ArrayProxy.create({
+  rangeStart: 0,
+  rangeWindowSize: 10,
+  totalBinding: '.contentObjects.length'
+});</pre>
+                        <p>Finally define an application, register it with initialization queue and load modules</p>
+                        <pre>App = SC.Application.create(SC.QueueActionSupport, {
+  store: SC.Store.create().from('App.DataSource'),
+
+  queue: SC.initializationQueue,
+  action: function() {
+    if (this.get('isError')) {
+      throw SC.Error.create('Module Loading Error',
+        this.getPath('errorObject.responseText'));
+    }
+  }
+});
+
+SC.initializationQueue.loadScripts(...);
+</pre>
                         </div>
                     </div>
                 </div>
