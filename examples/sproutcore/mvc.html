@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>sproutcha :: mvc :: sproutcore</title>
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+
+        <script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
+        <script src="assets/sproutcore.js" type="text/javascript"></script>
+        <script src="assets/sproutcore-datastore.js" type="text/javascript"></script>
+        <script src="assets/sproutcore-sparsearray.js" type="text/javascript"></script>
+        <script src="assets/sproutcore-queue.js" type="text/javascript"></script>
+
+        <style>
+            div, table, tr, td, th {
+                outline: none;
+            }
+
+            .container {
+                width: 480px;
+                margin-top: 20px;
+            }
+
+            .info {
+                float: right;
+            }
+
+            .info div {
+                font-size: .9em;
+                text-align: right;
+            }
+
+            .x-clear {
+                clear: both;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script type="text/javascript">
+          App = SC.Application.create(SC.QueueActionSupport, {
+            store: SC.Store.create().from('App.DataSource'),
+
+            queue: SC.initializationQueue,
+            action: function() {
+              if (this.get('isError')) {
+                SC.Logger.error('Modules Loading Error', this.getPath('errorObject.responseText'));
+                return;
+              }
+              /**
+               * Create a View from the loaded template
+               */
+              SC.View.create({
+                templateName: 'application',
+                classNames: ['container']
+              }).append();
+
+              /**
+               * Populate the store
+               */
+              App.Employees.set('contentObjects',
+                App.store.find(SC.Query.remote(App.Employee)));
+            }
+          });
+
+          SC.initializationQueue.loadScripts(
+            'mvc/templates/application.hbs',
+            'mvc/store/data_source.js',
+            'mvc/models/employee.js',
+            'mvc/models/company.js',
+            'mvc/controllers/employees.js',
+            'mvc/views/list.js',
+            'mvc/views/toolbar.js'
+          );
+        </script>
+    </body>
+</html>
