@@ -63,6 +63,9 @@
             .sproutcore {
                 background-image: url('img/sproutcore.png');
             }
+            .tabs > li > a {
+                outline: none;
+            }
             .pill-content > div {
                 padding: 10px;
             }
@@ -74,12 +77,12 @@
         </style>
     </head>
 
-    <body>
+    <body id="top">
 
         <div class="topbar" data-scrollspy="scrollspy">
             <div class="topbar-inner">
                 <div class="container">
-                    <a class="brand" href="#">SproutCha</a>
+                    <a class="brand" href="#top">SproutCha</a>
                     <ul class="nav">
                         <li class=""><a href="#class">Class</a></li>
                         <li class=""><a href="#model">Model</a></li>
