@@ -2,94 +2,15 @@
 var get = SC.get;
 
 /**
-  @extends SC.Mixin
- */
-SC.DelegateSupport = SC.Mixin.create({
-
-  /**
-    Selects the delegate that implements the specified method name.  Pass one
-    or more delegates.  The receiver is automatically included as a default.
-
-    This can be more efficient than using invokeDelegateMethod() which has
-    to marshall arguments into a delegate call.
-
-    @param {String} methodName
-    @param {Object...} delegate one or more delegate arguments
-    @returns {Object} delegate or null
-  */
-  delegateFor: function(methodName) {
-    var idx = 1,
-        len = arguments.length,
-        ret ;
-
-    while(idx<len) {
-      ret = arguments[idx];
-      if (ret && ret[methodName] !== undefined) return ret ;
-      idx++;
-    }
-
-    return (this[methodName] !== undefined) ? this : null;
-  },
-
-  /**
-    Invokes the named method on the delegate that you pass.  If no delegate
-    is defined or if the delegate does not implement the method, then a
-    method of the same name on the receiver will be called instead.
-
-    You can pass any arguments you want to pass onto the delegate after the
-    delegate and methodName.
-
-    @param {Object} delegate a delegate object.  May be null.
-    @param {String} methodName a method name
-    @param {Object...} args (OPTIONAL) any additional arguments
-
-    @returns {Object} value returned by delegate
-  */
-  invokeDelegateMethod: function(delegate, methodName, args) {
-    args = SC.$.makeArray(arguments); args = args.slice(2, args.length) ;
-    if (!delegate || !delegate[methodName]) delegate = this ;
-
-    var method = delegate[methodName];
-    return method ? method.apply(delegate, args) : null;
-  },
-
-  /**
-    Search the named delegates for the passed property.  If one is found,
-    gets the property value and returns it.  If none of the passed delegates
-    implement the property, search the receiver for the property as well.
-
-    @param {String} key the property to get.
-    @param {Object} delegate one or more delegate
-    @returns {Object} property value or undefined
-  */
-  getDelegateProperty: function(key, delegate) {
-    var idx = 1,
-        len = arguments.length,
-        ret;
-
-    while(idx<len) {
-      ret = arguments[idx++];
-      if (ret && ret[key] !== undefined) {
-        return get(ret, key);
-      }
-    }
-
-    return (this[key] !== undefined) ? get(this, key) : undefined;
-  }
-
-});
-
-/**
   @extends SC.Object
-  @mixins SC.DelegateSupport
   @mixins SC.Observable
   @mixins SC.Enumerable
-  @mixins SC.Array
   @mixins SC.MutableEnumerable
+  @mixins SC.Array
   @mixins SC.MutableArray
  */
-SC.SparseArray = SC.Object.extend(SC.DelegateSupport, SC.Observable,
-  SC.Enumerable, SC.Array, SC.MutableEnumerable, SC.MutableArray, {
+SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumerable,
+  SC.Array, SC.MutableArray, {
 
   // ..........................................................
   // LENGTH SUPPORT
@@ -439,6 +360,28 @@ SC.SparseArray = SC.Object.extend(SC.DelegateSupport, SC.Observable,
     this.arrayContentDidChange(0, oldLength, 0);
     this.invokeDelegateMethod(this.delegate, 'sparseArrayDidReset', this);
     return this;
+  },
+
+  /**
+    Invokes the named method on the delegate that you pass.  If no delegate
+    is defined or if the delegate does not implement the method, then a
+    method of the same name on the receiver will be called instead.
+
+    You can pass any arguments you want to pass onto the delegate after the
+    delegate and methodName.
+
+    @param {Object} delegate a delegate object.  May be null.
+    @param {String} methodName a method name
+    @param {Object...} args (OPTIONAL) any additional arguments
+
+    @returns {Object} value returned by delegate
+  */
+  invokeDelegateMethod: function(delegate, methodName, args) {
+    args = SC.$.makeArray(arguments); args = args.slice(2, args.length) ;
+    if (!delegate || !delegate[methodName]) delegate = this ;
+
+    var method = delegate[methodName];
+    return method ? method.apply(delegate, args) : null;
   }
 
 });
