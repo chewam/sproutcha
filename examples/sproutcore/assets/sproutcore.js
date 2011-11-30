@@ -2057,6 +2057,17 @@ SC.meta = function meta(obj, writable) {
   return ret;
 };
 
+SC.getMeta = function getMeta(obj, property) {
+  var meta = SC.meta(obj, false);
+  return meta[property];
+};
+
+SC.setMeta = function setMeta(obj, property, value) {
+  var meta = SC.meta(obj, true);
+  meta[property] = value;
+  return value;
+};
+
 /**
   @private
 
@@ -3772,7 +3783,7 @@ var timerMark; // used by timers...
 var K = function() {};
 var RunLoop = function(prev) {
   var self;
-  
+
   if (this instanceof RunLoop) {
     self = this;
   } else {
@@ -3781,7 +3792,7 @@ var RunLoop = function(prev) {
 
   self._prev = prev || null;
   self.onceTimers = {};
-  
+
   return self;
 }
 
@@ -3979,7 +3990,7 @@ function autorun() {
 }
 
 /**
-  Begins a new RunLoop is necessary and schedules a timer to flush the
+  Begins a new RunLoop if necessary and schedules a timer to flush the
   RunLoop at a later time.  This method is used by parts of SproutCore to
   ensure the RunLoop always finishes.  You normally do not need to call this
   method directly.  Instead use SC.run().
@@ -4040,7 +4051,7 @@ function invokeLaterTimers() {
   }
 
   // schedule next timeout to fire...
-  if (earliest>0) setTimeout(invokeLaterTimers, earliest-(+ new Date())); 
+  if (earliest>0) setTimeout(invokeLaterTimers, earliest-(+ new Date()));
 }
 
 /**
@@ -4082,7 +4093,7 @@ SC.run.later = function(target, method) {
     args = slice.call(arguments);
     wait = args.pop();
   }
-  
+
   expires = (+ new Date())+wait;
   timer   = { target: target, method: method, expires: expires, args: args };
   guid    = SC.guidFor(timer);
@@ -4592,11 +4603,8 @@ Binding.prototype = {
     @param {String} propertyPath the property path to connect to
     @returns {SC.Binding} receiver
   */
-  from: function(object, path) {
-    if (!path) { path = object; object = null; }
-
+  from: function(path) {
     this._from = path;
-    this._object = object;
     return this;
   },
 
@@ -5598,7 +5606,7 @@ var o_create = SC.platform.create;
 function meta(obj, writable) {
   var m = SC.meta(obj, writable!==false), ret = m.mixins;
   if (writable===false) return ret || EMPTY_META;
-  
+
   if (!ret) {
     ret = m.mixins = { __scproto__: obj };
   } else if (ret.__scproto__ !== obj) {
@@ -5612,8 +5620,8 @@ function initMixin(mixin, args) {
   if (args && args.length > 0) {
     mixin.mixins = a_map.call(args, function(x) {
       if (x instanceof Mixin) return x;
-      
-      // Note: Manually setup a primitive mixin here.  This is the only 
+
+      // Note: Manually setup a primitive mixin here.  This is the only
       // way to actually get a primitive mixin.  This way normal creation
       // of mixins will give you combined mixins...
       var mixin = new Mixin();
@@ -5622,7 +5630,7 @@ function initMixin(mixin, args) {
     });
   }
   return mixin;
-} 
+}
 
 var NATIVES = [Boolean, Object, Number, Array, Date, String];
 function isMethod(obj) {
@@ -5632,14 +5640,14 @@ function isMethod(obj) {
 
 function mergeMixins(mixins, m, descs, values, base) {
   var len = mixins.length, idx, mixin, guid, props, value, key, ovalue, concats;
-  
+
   function removeKeys(keyName) {
     delete descs[keyName];
     delete values[keyName];
   }
-  
+
   for(idx=0;idx<len;idx++) {
-    
+
     mixin = mixins[idx];
     if (!mixin) throw new Error('Null value found in SC.mixin()');
 
@@ -5647,13 +5655,13 @@ function mergeMixins(mixins, m, descs, values, base) {
       guid = SC.guidFor(mixin);
       if (m[guid]) continue;
       m[guid] = mixin;
-      props = mixin.properties; 
+      props = mixin.properties;
     } else {
       props = mixin; // apply anonymous mixin properties
     }
 
     if (props) {
-      
+
       // reset before adding each new mixin to pickup concats from previous
       concats = values.concatenatedProperties || base.concatenatedProperties;
       if (props.concatenatedProperties) {
@@ -5669,14 +5677,14 @@ function mergeMixins(mixins, m, descs, values, base) {
           descs[key]  = value;
           values[key] = undefined;
         } else {
-          
+
           // impl super if needed...
           if (isMethod(value)) {
             ovalue = (descs[key] === SC.SIMPLE_PROPERTY) && values[key];
             if (!ovalue) ovalue = base[key];
             if ('function' !== typeof ovalue) ovalue = null;
             if (ovalue) {
-              var o = value.__sc_observes__, ob = value.__sc_observesBefore__; 
+              var o = value.__sc_observes__, ob = value.__sc_observesBefore__;
               value = SC.wrap(value, ovalue);
               value.__sc_observes__ = o;
               value.__sc_observesBefore__ = ob;
@@ -5685,7 +5693,7 @@ function mergeMixins(mixins, m, descs, values, base) {
             var baseValue = values[key] || base[key];
             value = baseValue ? baseValue.concat(value) : SC.makeArray(value);
           }
-          
+
           descs[key]  = SC.SIMPLE_PROPERTY;
           values[key] = value;
         }
@@ -5695,7 +5703,7 @@ function mergeMixins(mixins, m, descs, values, base) {
       if (props.hasOwnProperty('toString')) {
         base.toString = props.toString;
       }
-      
+
     } else if (mixin.mixins) {
       mergeMixins(mixin.mixins, m, descs, values, base);
       if (mixin._without) mixin._without.forEach(removeKeys);
@@ -5729,9 +5737,9 @@ SC._mixinBindings = function(obj, key, value, m) {
 function applyMixin(obj, mixins, partial) {
   var descs = {}, values = {}, m = SC.meta(obj), req = m.required;
   var key, willApply, didApply, value, desc;
-  
+
   var mixinBindings = SC._mixinBindings;
-  
+
   mergeMixins(mixins, meta(obj), descs, values, obj);
 
   if (MixinDelegate.detect(obj)) {
@@ -5741,25 +5749,25 @@ function applyMixin(obj, mixins, partial) {
 
   for(key in descs) {
     if (!descs.hasOwnProperty(key)) continue;
-    
+
     desc = descs[key];
     value = values[key];
-     
+
     if (desc === REQUIRED) {
       if (!(key in obj)) {
         if (!partial) throw new Error('Required property not defined: '+key);
-        
+
         // for partial applies add to hash of required keys
         req = writableReq(obj);
         req.__sc_count__++;
         req[key] = true;
       }
-      
+
     } else {
-      
+
       while (desc instanceof Alias) {
-        
-        var altKey = desc.methodName; 
+
+        var altKey = desc.methodName;
         if (descs[altKey]) {
           value = values[altKey];
           desc  = descs[altKey];
@@ -5771,15 +5779,15 @@ function applyMixin(obj, mixins, partial) {
           desc  = SC.SIMPLE_PROPERTY;
         }
       }
-      
+
       if (willApply) willApply.call(obj, key);
-      
+
       var observerPaths = getObserverPaths(value),
           curObserverPaths = observerPaths && getObserverPaths(obj[key]),
           beforeObserverPaths = getBeforeObserverPaths(value),
           curBeforeObserverPaths = beforeObserverPaths && getBeforeObserverPaths(obj[key]),
           len, idx;
-          
+
       if (curObserverPaths) {
         len = curObserverPaths.length;
         for(idx=0;idx<len;idx++) {
@@ -5796,9 +5804,9 @@ function applyMixin(obj, mixins, partial) {
 
       // TODO: less hacky way for sproutcore-runtime to add bindings.
       value = mixinBindings(obj, key, value, m);
-      
+
       defineProperty(obj, key, desc, value);
-      
+
       if (observerPaths) {
         len = observerPaths.length;
         for(idx=0;idx<len;idx++) {
@@ -5812,7 +5820,7 @@ function applyMixin(obj, mixins, partial) {
           SC.addBeforeObserver(obj, beforeObserverPaths[idx], null, key);
         }
       }
-      
+
       if (req && req[key]) {
         req = writableReq(obj);
         req.__sc_count__--;
@@ -5823,7 +5831,7 @@ function applyMixin(obj, mixins, partial) {
 
     }
   }
-  
+
   // Make sure no required attrs remain
   if (!partial && req && req.__sc_count__>0) {
     var keys = [];
@@ -5858,16 +5866,16 @@ Mixin.create = function() {
 };
 
 Mixin.prototype.reopen = function() {
-  
+
   var mixin, tmp;
-  
+
   if (this.properties) {
     mixin = Mixin.create();
     mixin.properties = this.properties;
     delete this.properties;
     this.mixins = [mixin];
   }
-  
+
   var len = arguments.length, mixins = this.mixins, idx;
 
   for(idx=0;idx<len;idx++) {
@@ -5880,7 +5888,7 @@ Mixin.prototype.reopen = function() {
       mixins.push(tmp);
     }
   }
-  
+
   return this;
 };
 
@@ -5902,7 +5910,7 @@ function _detect(curMixin, targetMixin, seen) {
 
   if (seen[guid]) return false;
   seen[guid] = true;
-  
+
   if (curMixin === targetMixin) return true;
   var mixins = curMixin.mixins, loc = mixins ? mixins.length : 0;
   while(--loc >= 0) {
@@ -5926,7 +5934,7 @@ Mixin.prototype.without = function() {
 function _keys(ret, mixin, seen) {
   if (seen[SC.guidFor(mixin)]) return;
   seen[SC.guidFor(mixin)] = true;
-  
+
   if (mixin.properties) {
     var props = mixin.properties;
     for(var key in props) {
@@ -5969,6 +5977,24 @@ function processNames(paths, root, seen) {
   paths.length = idx; // cut out last item
 }
 
+function findNamespaces() {
+  var Namespace = SC.Namespace, obj;
+
+  if (Namespace.PROCESSED) { return; }
+
+  for (var prop in window) {
+    if (!window.hasOwnProperty(prop)) { continue; }
+
+    obj = window[prop];
+
+    if (obj instanceof Namespace) {
+      obj[NAME_KEY] = prop;
+    }
+  }
+}
+
+SC.identifyNamespaces = findNamespaces;
+
 superClassString = function(mixin) {
   var superclass = mixin.superclass;
   if (superclass) {
@@ -5980,9 +6006,24 @@ superClassString = function(mixin) {
 }
 
 classToString = function() {
-  if (!this[NAME_KEY] && !classToString.processed) {
-    classToString.processed = true;
-    processNames([], window, {});
+  var Namespace = SC.Namespace, namespace;
+
+  // TODO: Namespace should really be in Metal
+  if (Namespace) {
+    if (!this[NAME_KEY] && !classToString.processed) {
+      if (!Namespace.PROCESSED) {
+        findNamespaces();
+        Namespace.PROCESSED = true;
+      }
+
+      classToString.processed = true;
+
+      var namespaces = Namespace.NAMESPACES;
+      for (var i=0, l=namespaces.length; i<l; i++) {
+        namespace = namespaces[i];
+        processNames([namespace.toString()], namespace, {});
+      }
+    }
   }
 
   if (this[NAME_KEY]) {
@@ -5995,8 +6036,6 @@ classToString = function() {
       return "(unknown mixin)";
     }
   }
-
-  return this[NAME_KEY] || "(unknown mixin)";
 };
 
 Mixin.prototype.toString = classToString;
@@ -6008,7 +6047,7 @@ Mixin.mixins = function(obj) {
   for(key in mixins) {
     if (META_SKIP[key]) continue;
     mixin = mixins[key];
-    
+
     // skip primitive mixins since these are always anonymous
     if (!mixin.properties) ret.push(mixins[key]);
   }
@@ -6037,7 +6076,7 @@ MixinDelegate = Mixin.create({
 
   willApplyProperty: SC.required(),
   didApplyProperty:  SC.required()
-  
+
 });
 
 SC.MixinDelegate = MixinDelegate;
@@ -6045,7 +6084,7 @@ SC.MixinDelegate = MixinDelegate;
 
 // ..........................................................
 // OBSERVER HELPER
-// 
+//
 
 SC.observer = function(func) {
   var paths = Array.prototype.slice.call(arguments, 1);
@@ -6662,13 +6701,11 @@ SC.Enumerable = SC.Mixin.create( /** @lends SC.Enumerable */ {
     @returns {SC.Enumerable}
   */
   uniq: function() {
-    var ret = [], hasDups = false;
+    var ret = [];
     this.forEach(function(k){
-      if (ret.indexOf(k)<0) ret[ret.length] = k;
-      else hasDups = true;
+      if (ret.indexOf(k)<0) ret.push(k);
     });
-    
-    return hasDups ? ret : this ;
+    return ret;
   },
 
   /**
@@ -8091,7 +8128,7 @@ if (typeof console === 'undefined') {
   
   In general we recommend leaving this option set to true since it rarely
   conflicts with other code.  If you need to turn it off however, you can
-  define an ENV.ENHANCE_PROTOTYPES config to disable it.
+  define an ENV.EXTEND_PROTOTYPES config to disable it.
 */  
 SC.EXTEND_PROTOTYPES = (SC.ENV.EXTEND_PROTOTYPES !== false);
 
@@ -9259,10 +9296,8 @@ SC.ArrayProxy = SC.Object.extend(SC.MutableArray, {
     this.arrayContentDidChange(idx, removedCnt, addedCnt);
   },
   
-  init: function(content) {
+  init: function() {
     this._super();
-    // TODO: Why is init getting called with a parameter? --TD
-    if (content) set(this, 'content', content);
     this.contentDidChange();
   }
   
@@ -9544,7 +9579,7 @@ SC.TargetActionSupport = SC.Mixin.create({
   target: null,
   action: null,
 
-  targetObject: function() {
+  targetObject: SC.computed(function() {
     var target = get(this, 'target');
 
     if (SC.typeOf(target) === "string") {
@@ -9552,7 +9587,7 @@ SC.TargetActionSupport = SC.Mixin.create({
     } else {
       return target;
     }
-  }.property('target').cacheable(),
+  }).property('target').cacheable(),
 
   triggerAction: function() {
     var action = get(this, 'action'),
@@ -9591,18 +9626,38 @@ SC.TargetActionSupport = SC.Mixin.create({
 // ==========================================================================
 /**
   @private
-  A Namespace is an object usually used to contain other objects or methods 
+  A Namespace is an object usually used to contain other objects or methods
   such as an application or framework.  Create a namespace anytime you want
   to define one of these new containers.
-  
+
   # Example Usage
-  
+
       MyFramework = SC.Namespace.create({
         VERSION: '1.0.0'
       });
-      
+
 */
-SC.Namespace = SC.Object.extend();
+SC.Namespace = SC.Object.extend({
+  init: function() {
+    SC.Namespace.NAMESPACES.push(this);
+    SC.Namespace.PROCESSED = false;
+  },
+
+  toString: function() {
+    SC.identifyNamespaces();
+    return this[SC.GUID_KEY+'_name'];
+  },
+
+  destroy: function() {
+    var namespaces = SC.Namespace.NAMESPACES;
+    window[this.toString()] = undefined;
+    namespaces.splice(namespaces.indexOf(this), 1);
+    this._super();
+  }
+});
+
+SC.Namespace.NAMESPACES = [];
+SC.Namespace.PROCESSED = true;
 
 })({});
 
@@ -9664,10 +9719,10 @@ var EachArray = SC.Object.extend(SC.Array, {
     return item && get(item, this._keyName);
   },
 
-  length: function() {
+  length: SC.computed(function() {
     var content = this._content;
     return content ? get(content, 'length') : 0;
-  }.property('[]').cacheable()
+  }).property('[]').cacheable()
 
 });
 
@@ -9978,6 +10033,17 @@ if (ignore.length>0) {
 SC.NativeArray = NativeArray;
 
 /**
+  Creates an SC.NativeArray from an Array like object.
+  Does not modify the original object.
+
+  @returns {SC.NativeArray}
+*/
+SC.A = function(arr){
+  if (arr === undefined) { arr = []; }
+  return SC.NativeArray.apply(Array.prototype.slice.apply(arr));
+};
+
+/**
   Activates the mixin on the Array.prototype if not already applied.  Calling
   this method more than once is safe.
   
@@ -10112,10 +10178,10 @@ SC._RenderBuffer = SC.Object.extend(
   init: function() {
     this._super();
 
-    set(this ,'elementClasses', []);
+    set(this ,'elementClasses', SC.A());
     set(this, 'elementAttributes', {});
     set(this, 'elementStyle', {});
-    set(this, 'childBuffers', []);
+    set(this, 'childBuffers', SC.A());
     set(this, 'elements', {});
   },
 
@@ -10649,7 +10715,7 @@ SC.Application = SC.Namespace.extend(
 // Add a new named queue for rendering views that happens
 // after bindings have synced.
 var queues = SC.run.queues;
-queues.insertAt(queues.indexOf('actions')+1, 'render');
+queues.splice(jQuery.inArray('actions', queues)+1, 0, 'render');
 
 })({});
 
@@ -10678,11 +10744,11 @@ var getPath = SC.getPath, meta = SC.meta, fmt = SC.String.fmt;
 var childViewsProperty = SC.computed(function() {
   var childViews = get(this, '_childViews');
 
-  var ret = [];
+  var ret = SC.A();
 
   childViews.forEach(function(view) {
     if (view.isVirtual) {
-      ret = ret.concat(get(view, 'childViews'));
+      ret.pushObjects(get(view, 'childViews'));
     } else {
       ret.push(view);
     }
@@ -10755,7 +10821,7 @@ SC.View = SC.Object.extend(
     @field
     @type Function
   */
-  template: function(key, value) {
+  template: SC.computed(function(key, value) {
     if (value !== undefined) { return value; }
 
     var templateName = get(this, 'templateName'), template;
@@ -10770,13 +10836,13 @@ SC.View = SC.Object.extend(
       }
 
       if (!template) {
-        throw new SC.Error('%@ - Unable to find template "%@".'.fmt(this, templateName));
+        throw new SC.Error(fmt('%@ - Unable to find template "%@".', this, templateName));
       }
     }
 
     // return the template, or undefined if no template was found
     return template || get(this, 'defaultTemplate');
-  }.property('templateName').cacheable(),
+  }).property('templateName').cacheable(),
 
   /**
     The object from which templates should access properties.
@@ -10789,9 +10855,9 @@ SC.View = SC.Object.extend(
 
     @type Object
   */
-  templateContext: function(key, value) {
+  templateContext: SC.computed(function(key, value) {
     return value !== undefined ? value : this;
-  }.property().cacheable(),
+  }).cacheable(),
 
   /**
     If the view is currently inserted into the DOM of a parent view, this
@@ -10802,7 +10868,7 @@ SC.View = SC.Object.extend(
   */
   _parentView: null,
 
-  parentView: function() {
+  parentView: SC.computed(function() {
     var parent = get(this, '_parentView');
 
     if (parent && parent.isVirtual) {
@@ -10810,7 +10876,7 @@ SC.View = SC.Object.extend(
     } else {
       return parent;
     }
-  }.property('_parentView'),
+  }).property('_parentView'),
 
   /**
     If false, the view will appear hidden in DOM.
@@ -10830,7 +10896,7 @@ SC.View = SC.Object.extend(
   */
   childViews: childViewsProperty,
 
-  _childViews: [],
+  _childViews: SC.A(),
 
   /**
     Return the nearest ancestor that is an instance of the provided
@@ -10884,9 +10950,9 @@ SC.View = SC.Object.extend(
 
     @returns SC.CollectionView
   */
-  collectionView: function() {
+  collectionView: SC.computed(function() {
     return this.nearestInstanceOf(SC.CollectionView);
-  }.property().cacheable(),
+  }).cacheable(),
 
   /**
     Return the nearest ancestor that is a direct child of
@@ -10894,9 +10960,9 @@ SC.View = SC.Object.extend(
 
     @returns SC.View
   */
-  itemView: function() {
+  itemView: SC.computed(function() {
     return this.nearestChildOf(SC.CollectionView);
-  }.property().cacheable(),
+  }).cacheable(),
 
   /**
     Return the nearest ancestor that has the property
@@ -10904,9 +10970,9 @@ SC.View = SC.Object.extend(
 
     @returns SC.View
   */
-  contentView: function() {
+  contentView: SC.computed(function() {
     return this.nearestWithProperty('content');
-  }.property().cacheable(),
+  }).cacheable(),
 
   /**
     @private
@@ -10914,13 +10980,13 @@ SC.View = SC.Object.extend(
     When the parent view changes, recursively invalidate
     collectionView, itemView, and contentView
   */
-  _parentViewDidChange: function() {
+  _parentViewDidChange: SC.observer(function() {
     this.invokeRecursively(function(view) {
       view.propertyDidChange('collectionView');
       view.propertyDidChange('itemView');
       view.propertyDidChange('contentView');
     });
-  }.observes('_parentView'),
+  }, '_parentView'),
 
   /**
     Called on your view when it should push strings of HTML into a
@@ -11149,7 +11215,8 @@ SC.View = SC.Object.extend(
       // Normalize property path to be suitable for use
       // as a class name. For exaple, content.foo.barBaz
       // becomes bar-baz.
-      return SC.String.dasherize(get(property.split('.'), 'lastObject'));
+      parts = property.split('.');
+      return SC.String.dasherize(parts[parts.length-1]);
 
     // If the value is not NO, undefined, or null, return the current
     // value of the property.
@@ -11173,13 +11240,13 @@ SC.View = SC.Object.extend(
     @field
     @type DOMElement
   */
-  element: function(key, value) {
+  element: SC.computed(function(key, value) {
     if (value !== undefined) {
       return this.invokeForState('setElement', value);
     } else {
       return this.invokeForState('getElement');
     }
-  }.property('_parentView').cacheable(),
+  }).property('_parentView').cacheable(),
 
   /**
     Returns a jQuery object for this view's element. If you pass in a selector
@@ -11301,6 +11368,7 @@ SC.View = SC.Object.extend(
     // In the interim, we will just re-render if that happens. It is more
     // important than elements get garbage collected.
     this.destroyElement();
+    this.clearRenderedChildren();
   },
 
   /**
@@ -11311,9 +11379,9 @@ SC.View = SC.Object.extend(
     @type String
     @readOnly
   */
-  elementId: function(key, value) {
+  elementId: SC.computed(function(key, value) {
     return value !== undefined ? value : SC.guidFor(this);
-  }.property().cacheable(),
+  }).cacheable(),
 
   /**
     Attempts to discover the element in the parent element. The default
@@ -11363,9 +11431,7 @@ SC.View = SC.Object.extend(
   },
 
   /**
-    Called when the element of the view is created but before it is inserted
-    into the DOM.  Override this function to do any set up that requires an
-    element.
+    Called when a view is going to insert an element into the DOM.
   */
   willInsertElement: SC.K,
 
@@ -11403,10 +11469,15 @@ SC.View = SC.Object.extend(
 
     Invokes the receiver's willInsertElement() method if it exists and then
     invokes the same on all child views.
+
+    NOTE: In some cases this was called when the element existed. This no longer
+    works so we let people know. We can remove this warning code later.
   */
-  _notifyWillInsertElement: function() {
+  _notifyWillInsertElement: function(fromPreRender) {
     this.invokeRecursively(function(view) {
+      if (fromPreRender) { view._willInsertElementAccessUnsupported = true; }
       view.willInsertElement();
+      view._willInsertElementAccessUnsupported = false;
     });
   },
 
@@ -11462,11 +11533,11 @@ SC.View = SC.Object.extend(
   },
 
   /** @private (nodoc) */
-  _elementWillChange: function() {
+  _elementWillChange: SC.beforeObserver(function() {
     this.forEachChildView(function(view) {
       SC.propertyWillChange(view, 'element');
     });
-  }.observesBefore('element'),
+  }, 'element'),
 
   /**
     @private
@@ -11477,11 +11548,11 @@ SC.View = SC.Object.extend(
 
     @observes element
   */
-  _elementDidChange: function() {
+  _elementDidChange: SC.observer(function() {
     this.forEachChildView(function(view) {
       SC.propertyDidChange(view, 'element');
     });
-  }.observes('element'),
+  }, 'element'),
 
   /**
     Called when the parentView property has changed.
@@ -11703,15 +11774,15 @@ SC.View = SC.Object.extend(
     // SC.RootResponder to dispatch incoming events.
     SC.View.views[get(this, 'elementId')] = this;
 
-    var childViews = get(this, '_childViews').slice();
+    var childViews = SC.A(get(this, '_childViews').slice());
     // setup child views. be sure to clone the child views array first
     set(this, '_childViews', childViews);
 
 
-    this.classNameBindings = get(this, 'classNameBindings').slice();
-    this.classNames = get(this, 'classNames').slice();
+    this.classNameBindings = SC.A(get(this, 'classNameBindings').slice());
+    this.classNames = SC.A(get(this, 'classNames').slice());
 
-    this.set('domManager', this.domManagerClass.create({ view: this }));
+    set(this, 'domManager', this.domManagerClass.create({ view: this }));
 
     meta(this)["SC.View"] = {};
   },
@@ -11826,6 +11897,10 @@ SC.View = SC.Object.extend(
   createChildView: function(view, attrs) {
     if (SC.View.detect(view)) {
       view = view.create(attrs || {}, { _parentView: this });
+      
+      if (attrs && attrs.viewName) {
+        set(this, attrs.viewName, view);
+      }
     } else {
       sc_assert('must pass instance of View', view instanceof SC.View);
       set(view, '_parentView', this);
@@ -11839,9 +11914,9 @@ SC.View = SC.Object.extend(
     When the view's `isVisible` property changes, toggle the visibility
     element of the actual DOM element.
   */
-  _isVisibleDidChange: function() {
+  _isVisibleDidChange: SC.observer(function() {
     this.$().toggle(get(this, 'isVisible'));
-  }.observes('isVisible'),
+  }, 'isVisible'),
 
   clearBuffer: function() {
     this.invokeRecursively(function(view) {
@@ -11954,7 +12029,7 @@ SC.View.childViewsProperty = childViewsProperty;
 var get = SC.get, set = SC.set;
 
 SC.View.states = {
-  "default": {
+  _default: {
     // appendChild is only legal while rendering the buffer.
     appendChild: function() {
       throw "You can't use appendChild outside of the rendering process";
@@ -11985,21 +12060,33 @@ SC.View.reopen({
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 SC.View.states.preRender = {
-  parentState: SC.View.states['default'],
+  parentState: SC.View.states._default,
 
   // a view leaves the preRender state once its element has been
   // created (createElement).
   insertElement: function(view, fn) {
-    // If we don't have an element, guarantee that it exists before
-    // invoking the willInsertElement event.
+    view._notifyWillInsertElement(true);
     view.createElement();
-
     // after createElement, the view will be in the hasElement state.
-
-    view._notifyWillInsertElement();
     fn.call(view);
     view.transitionTo('inDOM');
     view._notifyDidInsertElement();
+  },
+
+  // This exists for the removal warning, remove later
+  $: function(view){
+    if (view._willInsertElementAccessUnsupported) {
+      console.error("Getting element from willInsertElement is unreliable and no longer supported.");
+    }
+    return SC.$();
+  },
+
+  // This exists for the removal warning, remove later
+  getElement: function(view){
+    if (view._willInsertElementAccessUnsupported) {
+      console.error("Getting element from willInsertElement is unreliable and no longer supported.");
+    }
+    return null;
   },
 
   setElement: function(view, value) {
@@ -12029,7 +12116,7 @@ SC.View.states.preRender = {
 var get = SC.get, set = SC.set, meta = SC.meta;
 
 SC.View.states.inBuffer = {
-  parentState: SC.View.states['default'],
+  parentState: SC.View.states._default,
 
   $: function(view, sel) {
     // if we don't have an element yet, someone calling this.$() is
@@ -12106,7 +12193,7 @@ SC.View.states.inBuffer = {
 var get = SC.get, set = SC.set, meta = SC.meta;
 
 SC.View.states.hasElement = {
-  parentState: SC.View.states['default'],
+  parentState: SC.View.states._default,
 
   $: function(view, sel) {
     var elem = get(view, 'element');
@@ -12174,7 +12261,7 @@ SC.View.states.inDOM = {
 var destroyedError = "You can't call %@ on a destroyed view", fmt = SC.String.fmt;
 
 SC.View.states.destroyed = {
-  parentState: SC.View.states['default'],
+  parentState: SC.View.states._default,
 
   appendChild: function() {
     throw fmt(destroyedError, ['appendChild']);
@@ -12469,13 +12556,13 @@ SC.CollectionView = SC.ContainerView.extend(
     return ret;
   },
 
-  _contentWillChange: function() {
+  _contentWillChange: SC.beforeObserver(function() {
     var content = this.get('content');
 
     if (content) { content.removeArrayObserver(this); }
     var len = content ? get(content, 'length') : 0;
     this.arrayWillChange(content, 0, len);
-  }.observesBefore('content'),
+  }, 'content'),
 
   /**
     @private
@@ -12485,7 +12572,7 @@ SC.CollectionView = SC.ContainerView.extend(
     asynchronously, to allow the element to be created before
     bindings have synchronized and vice versa.
   */
-  _contentDidChange: function() {
+  _contentDidChange: SC.observer(function() {
     var content = get(this, 'content');
 
     if (content) {
@@ -12495,7 +12582,7 @@ SC.CollectionView = SC.ContainerView.extend(
 
     var len = content ? get(content, 'length') : 0;
     this.arrayDidChange(content, 0, null, len);
-  }.observes('content'),
+  }, 'content'),
 
   destroy: function() {
     var content = get(this, 'content');
@@ -13139,20 +13226,16 @@ SC.Checkbox = SC.View.extend({
 
 var get = SC.get, set = SC.set;
 
-SC.TextField = SC.View.extend(
-  /** @scope SC.TextField.prototype */ {
+SC.TextSupport = SC.Mixin.create({
 
-  classNames: ['sc-text-field'],
+  value: "",
+
+  attributeBindings: ['placeholder', 'disabled'],
+  placeholder: null,
+  disabled: false,
 
   insertNewline: SC.K,
   cancel: SC.K,
-
-  tagName: "input",
-  attributeBindings: ['type', 'placeholder', 'value', 'disabled'],
-  type: "text",
-  value: "",
-  placeholder: null,
-  disabled: false,
 
   focusOut: function(event) {
     this._elementValueDidChange();
@@ -13173,27 +13256,54 @@ SC.TextField = SC.View.extend(
     @private
   */
   interpretKeyEvents: function(event) {
-    var map = SC.TextField.KEY_EVENTS;
+    var map = SC.TextSupport.KEY_EVENTS;
     var method = map[event.keyCode];
 
+    this._elementValueDidChange();
     if (method) { return this[method](event); }
-    else { this._elementValueDidChange(); }
   },
 
   _elementValueDidChange: function() {
-    set(this, 'value', this.$().val());
-  },
-
-  _updateElementValue: function() {
-    this.$().val(get(this, 'value'));
+    set(this, 'value', this.$().val() || null);
   }
+
 });
 
-SC.TextField.KEY_EVENTS = {
+SC.TextSupport.KEY_EVENTS = {
   13: 'insertNewline',
   27: 'cancel'
 };
 
+})({});
+
+
+(function(exports) {
+// ==========================================================================
+// Project:   SproutCore Handlebar Views
+// Copyright: ©2011 Strobe Inc. and contributors.
+// License:   Licensed under MIT license (see license.js)
+// ==========================================================================
+/** @class */
+
+var get = SC.get, set = SC.set;
+
+SC.TextField = SC.View.extend(SC.TextSupport,
+  /** @scope SC.TextField.prototype */ {
+
+  classNames: ['sc-text-field'],
+
+  tagName: "input",
+  attributeBindings: ['type', 'value'],
+  type: "text",
+
+  /**
+    @private
+  */
+  _updateElementValue: function() {
+    this.$().val(get(this, 'value'));
+  }
+
+});
 
 })({});
 
@@ -13275,62 +13385,24 @@ SC.Button = SC.View.extend(SC.TargetActionSupport, {
 
 var get = SC.get, set = SC.set;
 
-SC.TextArea = SC.View.extend({
+SC.TextArea = SC.View.extend(SC.TextSupport, {
 
   classNames: ['sc-text-area'],
 
   tagName: "textarea",
-  value: "",
-  attributeBindings: ['placeholder', 'disabled'],
-  placeholder: null,
-  disabled: false,
-
-  insertNewline: SC.K,
-  cancel: SC.K,
-  
-  focusOut: function(event) {
-    this._elementValueDidChange();
-    return false;
-  },
-
-  change: function(event) {
-    this._elementValueDidChange();
-    return false;
-  },
-
-  keyUp: function(event) {
-    this.interpretKeyEvents(event);
-    return false;
-  },
 
   /**
     @private
   */
-  willInsertElement: function() {
+  didInsertElement: function() {
     this._updateElementValue();
   },
 
-  interpretKeyEvents: function(event) {
-    var map = SC.TextArea.KEY_EVENTS;
-    var method = map[event.keyCode];
-
-    this._elementValueDidChange();
-    if (method) { return this[method](event); }
-  },
-
-  _elementValueDidChange: function() {
-    set(this, 'value', this.$().val() || null);
-  },
-
-  _updateElementValue: function() {
+  _updateElementValue: SC.observer(function() {
     this.$().val(get(this, 'value'));
-  }.observes('value')
-});
+  }, 'value')
 
-SC.TextArea.KEY_EVENTS = {
-  13: 'insertNewline',
-  27: 'cancel'
-};
+});
 
 })({});
 
@@ -13637,10 +13709,6 @@ var get = SC.get, getPath = SC.getPath, set = SC.set, fmt = SC.String.fmt;
       // is an empty string, we are printing the current context
       // object ({{this}}) so updating it is not our responsibility.
       if (property !== '') {
-        set(bindView, 'removeObserver', function() {
-          SC.removeObserver(ctx, property, invoker);
-        });
-
         SC.addObserver(ctx, property, invoker);
       }
     } else {
@@ -13899,7 +13967,8 @@ SC.Handlebars.bindClasses = function(context, classBindings, view, id) {
       // Normalize property path to be suitable for use
       // as a class name. For exaple, content.foo.barBaz
       // becomes bar-baz.
-      return SC.String.dasherize(get(property.split('.'), 'lastObject'));
+      var parts = property.split('.');
+      return SC.String.dasherize(parts[parts.length-1]);
 
     // If the value is not NO, undefined, or null, return the current
     // value of the property.
@@ -14119,7 +14188,7 @@ SC.Handlebars.registerHelper('view', function(path, options) {
 /*globals Handlebars sc_assert */
 
 // TODO: Don't require all of this module
-var get = SC.get;
+var get = SC.get, fmt = SC.String.fmt;
 
 /**
   @name Handlebars.helpers.collection
@@ -14145,7 +14214,7 @@ SC.Handlebars.registerHelper('collection', function(path, options) {
   // Otherwise, just default to the standard class.
   var collectionClass;
   collectionClass = path ? SC.getPath(this, path) : SC.CollectionView;
-  sc_assert("%@ #collection: Could not find %@".fmt(data.view, path), !!collectionClass);
+  sc_assert(fmt("%@ #collection: Could not find %@", data.view, path), !!collectionClass);
 
   var hash = options.hash, itemHash = {}, match;
 
@@ -14154,7 +14223,7 @@ SC.Handlebars.registerHelper('collection', function(path, options) {
   var collectionPrototype = get(collectionClass, 'proto');
   delete hash.itemViewClass;
   itemViewClass = itemViewPath ? SC.getPath(collectionPrototype, itemViewPath) : collectionPrototype.itemViewClass;
-  sc_assert("%@ #collection: Could not find %@".fmt(data.view, itemViewPath), !!itemViewClass);
+  sc_assert(fmt("%@ #collection: Could not find %@", data.view, itemViewPath), !!itemViewClass);
 
   // Go through options passed to the {{collection}} helper and extract options
   // that configure item views instead of the collection itself.
@@ -14187,9 +14256,9 @@ SC.Handlebars.registerHelper('collection', function(path, options) {
   }
 
   if (hash.preserveContext) {
-    itemHash.templateContext = function() {
+    itemHash.templateContext = SC.computed(function() {
       return get(this, 'content');
-    }.property('content');
+    }).property('content');
     delete hash.preserveContext;
   }
 
