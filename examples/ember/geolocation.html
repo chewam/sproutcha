@@ -3,9 +3,9 @@
   <head>
     <title>sproutcha :: geolocation :: sproutcore</title>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
-    <script src="assets/sproutcore.js" type="text/javascript"></script>
-    <script src="assets/sproutcore-geolocation.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.min.js" type="text/javascript"></script>
+    <script src="assets/ember-geolocation.js" type="text/javascript"></script>
 
     <style>
       .container {
@@ -67,7 +67,7 @@
               {{/if}}
             {{/if}}
             <div class="actions">
-              {{#view SC.Button classNames="btn" target="App.currentLocation" action="updateLocation"}}Update{{/view}}
+              {{#view Em.Button classNames="btn" target="App.currentLocation" action="updateLocation"}}Update{{/view}}
             </div>
           </fieldset>
         </form>
@@ -75,9 +75,9 @@
     </script>
 
     <script type="text/javascript">
-      App = SC.Application.create();
+      App = Em.Application.create();
 
-      App.currentLocation = SC.GeoLocation.create({autoUpdate: false});
+      App.currentLocation = Em.GeoLocation.create({autoUpdate: false});
     </script>
     </body>
 </html>

@@ -1,16 +1,17 @@
 (function() {
-var get = SC.get;
+
+var get = Ember.get;
 
 /**
-  @extends SC.Object
-  @mixins SC.Observable
-  @mixins SC.Enumerable
-  @mixins SC.MutableEnumerable
-  @mixins SC.Array
-  @mixins SC.MutableArray
+  @extends Ember.Object
+  @mixins Ember.Observable
+  @mixins Ember.Enumerable
+  @mixins Ember.MutableEnumerable
+  @mixins Ember.Array
+  @mixins Ember.MutableArray
  */
-SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumerable,
-  SC.Array, SC.MutableArray, {
+Ember.SparseArray = Ember.Object.extend(Ember.Observable, Ember.Enumerable, Ember.MutableEnumerable,
+  Ember.Array, Ember.MutableArray, {
 
   // ..........................................................
   // LENGTH SUPPORT
@@ -27,7 +28,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
   */
   length: function() {
     var del = this.delegate;
-    if (del && SC.none(this._length) && del.sparseArrayDidRequestLength) {
+    if (del && Ember.none(this._length) && del.sparseArrayDidRequestLength) {
       this._requestingLength++;
       del.sparseArrayDidRequestLength(this);
       this._requestingLength--;
@@ -42,11 +43,11 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     requests the array length.
 
     @param {Number} length the length or null
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   provideLength: function(length) {
     var oldLength;
-    if (SC.none(length)) this._sa_content = null ;
+    if (Ember.none(length)) this._sa_content = null ;
     if (length !== this._length) {
       oldLength = this._length;
       this._length = length;
@@ -120,11 +121,11 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     all of the defined indexes.  Currently this can be quite expensive if
     you have a lot of indexes defined.
 
-    @param {SC.IndexSet} indexes optional from indexes
-    @returns {SC.IndexSet} defined indexes
+    @param {Ember.IndexSet} indexes optional from indexes
+    @returns {Ember.IndexSet} defined indexes
   */
   definedIndexes: function(indexes) {
-    var ret = SC.IndexSet.create(),
+    var ret = Ember.IndexSet.create(),
         content = this._sa_content,
         idx, len;
 
@@ -154,7 +155,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     It will check if the range has been already requested.
 
     @param {Number} idx the index to retrieve
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   requestIndex: function(idx) {
     var del = this.delegate;
@@ -223,7 +224,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
 
     @param {Range} range the range to apply to
     @param {Array} array the array of objects to insert
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   provideObjectsInRange: function(range, array) {
     var content = this._sa_content;
@@ -241,7 +242,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
 
     @param {Number} index the index to insert
     @param {Object} the object to insert
-    @return {SC.SparseArray} receiver
+    @return {Ember.SparseArray} receiver
   */
   provideObjectAtIndex: function(index, object) {
     var array = this._TMP_PROVIDE_ARRAY, range = this._TMP_PROVIDE_RANGE;
@@ -256,7 +257,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     content from the delegate again when it is requested.
 
     @param {Range} the range
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   objectsDidChangeInRange: function(range) {
 
@@ -264,7 +265,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     var content = this._sa_content ;
     if (content) {
       // if range covers entire length of cached content, just reset array
-      if (range.start === 0 && SC.maxRange(range)>=content.length) {
+      if (range.start === 0 && Ember.maxRange(range)>=content.length) {
         this._sa_content = null ;
 
       // otherwise, step through the changed parts and delete them.
@@ -291,7 +292,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
       ret = del.sparseArrayDidRequestIndexOf(this, obj);
     } 
     
-    if (SC.none(ret)) {
+    if (Ember.none(ret)) {
       c = this._sa_content ;
       if (!c) c = this._sa_content = [] ;
       ret = c.indexOf(obj) ;
@@ -310,7 +311,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     @param {Number} idx the index to begin to replace
     @param {Number} amt the number of items to replace
     @param {Array} objects the new objects to set instead
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   replace: function(idx, amt, objects) {
     objects = objects || [] ;
@@ -335,7 +336,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
 
     this.arrayContentWillChange(idx, amt, len) ;
 
-    if (!SC.none(this._length)) {
+    if (!Ember.none(this._length)) {
       this.propertyWillChange('length');
       this._length += delta;
       this.propertyDidChange('length');
@@ -350,7 +351,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     Resets the SparseArray, causing it to reload its content from the
     delegate again.
 
-    @returns {SC.SparseArray} receiver
+    @returns {Ember.SparseArray} receiver
   */
   reset: function() {
     var oldLength;
@@ -377,7 +378,7 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
     @returns {Object} value returned by delegate
   */
   invokeDelegateMethod: function(delegate, methodName, args) {
-    args = SC.$.makeArray(arguments); args = args.slice(2, args.length) ;
+    args = Ember.$.makeArray(arguments); args = args.slice(2, args.length) ;
     if (!delegate || !delegate[methodName]) delegate = this ;
 
     var method = delegate[methodName];
@@ -391,10 +392,11 @@ SC.SparseArray = SC.Object.extend(SC.Observable, SC.Enumerable, SC.MutableEnumer
   provided.
 
   @param {Number} len the length of the array
-  @returns {SC.SparseArray}
+  @returns {Ember.SparseArray}
 */
-SC.SparseArray.array = function(len) {
+Ember.SparseArray.array = function(len) {
   return this.create({ _length: len||0 });
 };
+
 
 })();

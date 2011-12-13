@@ -1,7 +1,7 @@
 (function() {
-var get = SC.get, set = SC.set;
+var get = Ember.get, set = Ember.set;
 
-SC.GeoLocation = SC.Object.extend({
+Ember.GeoLocation = Ember.Object.extend({
   /**
    * @property {Boolean}
    * When set to true, continually monitor the location of the device (beginning immediately).
@@ -119,7 +119,7 @@ SC.GeoLocation = SC.Object.extend({
    */
   isSupported: ('geolocation' in window.navigator),
 
-  hasLocationBinding: SC.Binding.bool('timestamp'),
+  hasLocationBinding: Ember.Binding.bool('timestamp'),
 
   init: function() {
     this._super();
@@ -128,7 +128,7 @@ SC.GeoLocation = SC.Object.extend({
         (window.google || {}).gears ? google.gears.factory.create('beta.geolocation') : null);
     
     if (get(this, 'autoUpdate')) {
-      SC.run.next(this, 'autoUpdateDidChange');
+      Ember.run.next(this, 'autoUpdateDidChange');
     }
   },
 
@@ -169,7 +169,7 @@ SC.GeoLocation = SC.Object.extend({
    */
   autoUpdateDidChange: function() {
     var autoUpdate = get(this, 'autoUpdate');
-    if (this._watchOperation != null) {
+    if (this._watchOperation !== null) {
       this._provider.clearWatch(this._watchOperation);
       this._watchOperation = null;
     }
@@ -232,7 +232,7 @@ SC.GeoLocation = SC.Object.extend({
     };
   }.property('maximumAge', 'allowHighAccuracy', 'timeout').cacheable(),
 
-  locationDidChange: SC.K
+  locationDidChange: Ember.K
 });
 
 })();

@@ -1,6 +1,6 @@
-App.DataSource = SC.DataSource.extend({
+App.DataSource = Ember.DataSource.extend({
   fetch: function(store, query) {
-    store.loadQueryResults(query, SC.SparseArray.create({
+    store.loadQueryResults(query, Ember.SparseArray.create({
       delegate: this,
       store: store,
       query: query,
@@ -41,6 +41,6 @@ App.DataSource = SC.DataSource.extend({
   },
 
   errorFetchRecords: function(error) {
-    SC.Logger.error('Do somephing about errors');
+    Ember.Logger.error('Do somephing about errors');
   }
 });

@@ -3,10 +3,10 @@
   <head>
     <title>sproutcha :: store :: sproutcore</title>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-    <script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
-    <script src="assets/sproutcore.js" type="text/javascript"></script>
-    <script src="assets/sproutcore-datastore.js" type="text/javascript"></script>
-    <script src="assets/sproutcore-sparsearray.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.min.js" type="text/javascript"></script>
+    <script src="assets/ember-datastore.js" type="text/javascript"></script>
+    <script src="assets/ember-sparsearray.js" type="text/javascript"></script>
 
     <style>
       .container {
@@ -73,19 +73,19 @@
     </script>
 
     <script type="text/javascript">
-      App = SC.Application.create({
-        store: SC.Store.create().from('App.DataSource'),
+      App = Ember.Application.create({
+        store: Ember.Store.create().from('App.DataSource'),
 
         ready: function() {
           this._super();
           App.Employees.set('contentObjects',
-            App.store.find(SC.Query.remote(App.Employee)));
+            App.store.find(Ember.Query.remote(App.Employee)));
         }
       });
 
-      App.DataSource = SC.DataSource.extend({
+      App.DataSource = Ember.DataSource.extend({
         fetch: function(store, query) {
-          store.loadQueryResults(query, SC.SparseArray.create({
+          store.loadQueryResults(query, Ember.SparseArray.create({
             delegate: this,
             store: store,
             query: query,
@@ -126,25 +126,25 @@
         },
       
         errorFetchRecords: function(error) {
-          SC.Logger.log('Do somephing about errors');
+          Ember.Logger.log('Do somephing about errors');
         }
       });
           
-      App.Employee = SC.Record.extend({
+      App.Employee = Ember.Record.extend({
         primaryKey: 'id',
 
-        first_name: SC.Record.attr(String),
-        last_name: SC.Record.attr(String),
-        salary: SC.Record.attr(Number),
-        company: SC.Record.toOne('App.Company', {isMaster: true})
+        first_name: Ember.Record.attr(String),
+        last_name: Ember.Record.attr(String),
+        salary: Ember.Record.attr(Number),
+        company: Ember.Record.toOne('App.Company', {isMaster: true})
       });
 
-      App.Company = SC.Record.extend({
+      App.Company = Ember.Record.extend({
         primaryKey: 'id',
-        name: SC.Record.attr(String)
+        name: Ember.Record.attr(String)
       });
 
-      App.Employees = SC.ArrayProxy.create({
+      App.Employees = Ember.ArrayProxy.create({
         rangeStart: 0,
         rangeWindowSize: 10,
         totalBinding: '.contentObjects.length',
@@ -172,8 +172,8 @@
           var content = this.get('contentObjects').slice(this.get('rangeStart'), this.get('rangeStop'));
           var contentLength = content.get('length'),
               contentFirstObject = content.get('firstObject');
-          if (contentLength > 0 && !SC.none(contentFirstObject)) {
-            SC.run.schedule('sync', this, function() {
+          if (contentLength > 0 && !Ember.none(contentFirstObject)) {
+            Ember.run.schedule('sync', this, function() {
               this.set('content', content);
             });
           }
@@ -204,7 +204,7 @@
         }.property('total', 'rangeWindowSize').cacheable()
       });
 
-      App.Button = SC.Button.extend({
+      App.Button = Ember.Button.extend({
         tagName: 'li',
         type: null,
         targetBinding: 'App.Employees',
@@ -217,13 +217,13 @@
       App.PreviousButton = App.Button.extend({
         classNames: ['prev'],
         action: 'previousPage',
-        disabledBinding: SC.Binding.not('target.hasPrevious')
+        disabledBinding: Ember.Binding.not('target.hasPrevious')
       });
 
       App.NextButton = App.Button.extend({
         classNames: ['next'],
         action: 'nextPage',
-        disabledBinding: SC.Binding.not('target.hasNext')
+        disabledBinding: Ember.Binding.not('target.hasNext')
       });
     </script>
     </body>
