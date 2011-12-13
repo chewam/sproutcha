@@ -1,4 +1,4 @@
-App.Employees = SC.ArrayProxy.create({
+App.Employees = Ember.ArrayProxy.create({
   rangeStart: 0,
   rangeWindowSize: 10,
   totalBinding: '.contentObjects.length',
@@ -26,8 +26,8 @@ App.Employees = SC.ArrayProxy.create({
     var content = this.get('contentObjects').slice(this.get('rangeStart'), this.get('rangeStop'));
     var contentLength = content.get('length'),
         contentFirstObject = content.get('firstObject');
-    if (contentLength > 0 && !SC.none(contentFirstObject)) {
-      SC.run.schedule('sync', this, function() {
+    if (contentLength > 0 && !Ember.none(contentFirstObject)) {
+      Ember.run.schedule('sync', this, function() {
         this.set('content', content);
       });
     }

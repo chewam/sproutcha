@@ -4,11 +4,11 @@
         <title>sproutcha :: mvc :: sproutcore</title>
         <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
 
-        <script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript"></script>
-        <script src="assets/sproutcore.js" type="text/javascript"></script>
-        <script src="assets/sproutcore-datastore.js" type="text/javascript"></script>
-        <script src="assets/sproutcore-sparsearray.js" type="text/javascript"></script>
-        <script src="assets/sproutcore-loader.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.min.js" type="text/javascript"></script>
+        <script src="assets/ember-datastore.js" type="text/javascript"></script>
+        <script src="assets/ember-sparsearray.js" type="text/javascript"></script>
+        <script src="assets/loader.js" type="text/javascript"></script>
 
         <style>
             div, table, tr, td, th {
@@ -37,19 +37,19 @@
 
     <body>
         <script type="text/javascript">
-          App = SC.Application.create({
-            store: SC.Store.create().from('App.DataSource'),
+          App = Ember.Application.create({
+            store: Ember.Store.create().from('App.DataSource'),
 
             loadError: function(xhr) {
-              SC.$.holdReady(true);
-              SC.Logger.error('Modules Loading Error: %@'.fmt(xhr.responseText));
+              $.holdReady(true);
+              Ember.Logger.error('Modules Loading Error: %@'.fmt(xhr.responseText));
             },
 
             ready: function() {
               /**
                * Create a View from the loaded template
                */
-              SC.View.create({
+              Ember.View.create({
                 templateName: 'application',
                 classNames: ['container']
               }).append();
@@ -58,13 +58,13 @@
                * Populate the store
                */
               App.Employees.set('contentObjects',
-                App.store.find(SC.Query.remote(App.Employee)));
+                App.store.find(Ember.Query.remote(App.Employee)));
             }
           });
 
-          SC.Loader.set('delegate', App);
+          //SC.Loader.set('delegate', App);
 
-          SC.Loader.loadScripts(
+          Loader.load(
             'mvc/templates/application.hbs',
             'mvc/store/data_source.js',
             'mvc/models/employee.js',
