@@ -3,17 +3,17 @@
     <head>
         <title>SproutCha</title>
 
-        <meta name="keywords" content="javascript, framework, compare, examples, extjs, sencha, comparison, sproutcore, http://github.com/goldledoigt/sproutcha, http://goldledoigt.github.com/sproutcha, aspects" />
-        <meta name="description" content="The aim of this project is to compare the libraries SproutCore and Sencha. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.
+        <meta name="keywords" content="javascript, framework, compare, examples, extjs, sencha, comparison, sproutcore, ember, http://github.com/goldledoigt/sproutcha, http://goldledoigt.github.com/sproutcha, aspects" />
+        <meta name="description" content="The aim of this project is to compare the libraries Ember and Sencha. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.
 
-        Because SproutCore 2 does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library Bootstrap, from Twitter.
+        Because Ember does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library Bootstrap, from Twitter.
 
-        Note that the comparison is not exclusively for SproutCore and Sencha, feel free to provide examples based on other libraries on GitHub." />
+        Note that the comparison is not exclusively for Ember and Sencha, feel free to provide examples based on other libraries on GitHub." />
 
-        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+        <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
         <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
         <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-        <script src="http://code.jquery.com/jquery-1.7rc2.min.js" type="text/javascript"></script>
+        <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-tabs.js"></script>
         <script type="text/javascript" src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-scrollspy.js"></script>
 
@@ -107,7 +107,7 @@
                 <a href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a>
                 <g:plusone size="medium" annotation="none"></g:plusone>
             </div>
-            <h1><span class="sproutcore">SproutCore</span> vs <span class="sencha">Sencha</span> <small>vs whatever...</small></h1>
+            <h1><span class="sproutcore">Ember</span> vs <span class="sencha">Sencha</span> <small>vs whatever...</small></h1>
 
             <div class="row header-text">
               <div class="span4">
@@ -115,9 +115,9 @@
                   <a href="https://github.com/goldledoigt/sproutcha" target="_blank" class="btn">Follow On GitHub</a>
               </div>
               <div class="span12">
-                  <p>The aim of this project is to compare the libraries <a target="_blank" href="http://www.sproutcore.com/">SproutCore</a> and <a  target="_blank" href="http://www.sencha.com/">Sencha</a>. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.</p>
-                  <p>Because SproutCore 2 does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library <a href="twitter.github.com/bootstrap/">Bootstrap, from Twitter</a>.</p>
-                  <p>Note that the comparison is not exclusively for SproutCore and Sencha, feel free to provide examples based on other libraries on <a  target="_blank" href="http://github.com/goldledoigt/sproutcha">GitHub</a>.</p>
+                  <p>The aim of this project is to compare the libraries <a target="_blank" href="http://www.emberjs.com/">Ember</a> and <a  target="_blank" href="http://www.sencha.com/">Sencha</a>. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.</p>
+                  <p>Because Ember does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library <a href="twitter.github.com/bootstrap/">Bootstrap, from Twitter</a>.</p>
+                  <p>Note that the comparison is not exclusively for Ember and Sencha, feel free to provide examples based on other libraries on <a  target="_blank" href="http://github.com/goldledoigt/sproutcha">GitHub</a>.</p>
               </div>
             </div>
 
@@ -135,7 +135,7 @@
 
                     <ul class="tabs">
                         <li class="active"><a href="#class-sencha">ExtJS 4</a></li>
-                        <li><a href="#class-sproutcore">SproutCore 2</a></li>
+                        <li><a href="#class-sproutcore">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="class-sencha">
@@ -183,7 +183,7 @@ employee2.id // 2</pre>
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
                             <p>A Person class is created with properties `firstName` and `lastName`.</p>
                             <div style="clear: both;"></div>
-                            <pre>App.Person = SC.Object.extend({
+                            <pre>App.Person = Em.Object.extend({
   firstName: '',
   lastName: ''
 });
@@ -243,7 +243,7 @@ employee2.get('id') // 2</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#model-sencha">ExtJS 4</a></li>
-                        <li><a href="#model-sproutcore">SproutCore 2</a></li>
+                        <li><a href="#model-sproutcore">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="model-sencha">
@@ -273,21 +273,21 @@ employee.save({
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/model.html">example</a>
                             <p>Define the store</p>
                             <div style="clear: both;"></div>
-                            <pre>App = SC.Application.create({
-  store: SC.Store.create().from('App.DataSource')
+                            <pre>App = Em.Application.create({
+  store: Em.Store.create().from('App.DataSource')
 });</pre>
                             <p>Define the data source</p>
-                            <pre>App.DataSource = SC.DataSource.extend({
+                            <pre>App.DataSource = Em.DataSource.extend({
   retrieveRecord: function(store, storeKey, id) {...},
   updateRecord: function(store, storeKey) {...}
 });</pre>
                             <p>Define the model</p>
-                            <pre>App.Employee = SC.Record.extend({
+                            <pre>App.Employee = Em.Record.extend({
   primaryKey: 'id',
 
-  firstName: SC.Record.attr(String),
-  lastName: SC.Record.attr(String),
-  salary: SC.Record.attr(Number)
+  firstName: Em.Record.attr(String),
+  lastName: Em.Record.attr(String),
+  salary: Em.Record.attr(Number)
 });</pre>
                             <p>Load an employee with id = 1</p>
                             <pre>App.set('currentEmployee', App.store.find(App.Employee, 1));</pre>
@@ -316,7 +316,7 @@ employee.save({
 
                     <ul class="tabs">
                         <li class="active"><a href="#store-sencha">ExtJS 4</a></li>
-                        <li><a href="#store-sproutcore">SproutCore 2</a></li>
+                        <li><a href="#store-sproutcore">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="store-sencha">
@@ -352,19 +352,19 @@ store.previousPage();</pre>
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/store.html">example</a>
                             <p>Create and load store</p>
                             <div style="clear: both;"></div>
-                            <pre>App = SC.Application.create({
-  store: SC.Store.create().from('App.DataSource'),
+                            <pre>App = Em.Application.create({
+  store: Em.Store.create().from('App.DataSource'),
 
   ready: function() {
     this._super();
     App.Employees.set('contentObjects',
-      App.store.find(SC.Query.remote(App.Employee)));
+      App.store.find(Em.Query.remote(App.Employee)));
   }
 });</pre>
                             <p>Define sparse data source</p>
-                            <pre>App.DataSource = SC.DataSource.extend({
+                            <pre>App.DataSource = Em.DataSource.extend({
   fetch: function(store, query) {
-    store.loadQueryResults(query, SC.SparseArray.create({
+    store.loadQueryResults(query, Em.SparseArray.create({
       delegate: this,
       store: store,
       query: query,
@@ -374,21 +374,21 @@ store.previousPage();</pre>
   }
 });</pre>
                             <p>Define the model</p>
-                            <pre>App.Employee = SC.Record.extend({
+                            <pre>App.Employee = Em.Record.extend({
   primaryKey: 'id',
 
-  first_name: SC.Record.attr(String),
-  last_name: SC.Record.attr(String),
-  salary: SC.Record.attr(Number),
-  company: SC.Record.toOne('App.Company', {isMaster: true})
+  first_name: Em.Record.attr(String),
+  last_name: Em.Record.attr(String),
+  salary: Em.Record.attr(Number),
+  company: Em.Record.toOne('App.Company', {isMaster: true})
 });
 
-App.Company = SC.Record.extend({
+App.Company = Em.Record.extend({
   primaryKey: 'id',
-  name: SC.Record.attr(String)
+  name: Em.Record.attr(String)
 });</pre>
                             <p>Define the data proxy</p>
-                            <pre>App.Employees = SC.ArrayProxy.create({
+                            <pre>App.Employees = Em.ArrayProxy.create({
   rangeStart: 0,
   rangeWindowSize: 10,
   totalBinding: '.contentObjects.length',
@@ -433,7 +433,7 @@ App.Employees.previousPage();</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#geolocation-sencha">ExtJS 4</a></li>
-                        <li><a href="#geolocation-sproutcore">SproutCore 2</a></li>
+                        <li><a href="#geolocation-sproutcore">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="geolocation-sencha">
@@ -462,9 +462,9 @@ App.Employees.previousPage();</pre>
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/geolocation.html">example</a>
                             <p>Initialize a GeoLocation</p>
                             <div style="clear: both;"></div>
-                            <pre>App.currentLocation = SC.GeoLocation.create({autoUpdate: false});</pre>
+                            <pre>App.currentLocation = Em.GeoLocation.create({autoUpdate: false});</pre>
                             <p>Update geolocation on button click</p>
-                            <pre>{{#view SC.Button target="App.currentLocation" action="updateLocation"}}
+                            <pre>{{#view Em.Button target="App.currentLocation" action="updateLocation"}}
   Update
 {{/view}}</pre>
                             <p>Show result</p>
@@ -496,7 +496,7 @@ App.Employees.previousPage();</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#mvc-sencha">ExtJS 4</a></li>
-                        <li><a href="#mvc-sproutcore">SproutCore 2</a></li>
+                        <li><a href="#mvc-sproutcore">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="mvc-sencha">
@@ -547,49 +547,49 @@ Ext.define('MyApp.view.PagingToolbar', {
                             <a class="btn success pull-right" target="_blank" href="examples/sproutcore/mvc.html">example</a>
                             <p>Define a model</p>
                             <div style="clear: both;"></div>
-                            <pre>App.Employee = SC.Record.extend({
+                            <pre>App.Employee = Em.Record.extend({
   primaryKey: 'id',
 
-  first_name: SC.Record.attr(String),
-  last_name: SC.Record.attr(String),
-  salary: SC.Record.attr(Number),
-  company: SC.Record.toOne('App.Company', {isMaster: true})
+  first_name: Em.Record.attr(String),
+  last_name: Em.Record.attr(String),
+  salary: Em.Record.attr(Number),
+  company: Em.Record.toOne('App.Company', {isMaster: true})
 });</pre>
                             <p>Define a data source</p>
-                            <pre>App.DataSource = SC.DataSource.extend({
+                            <pre>App.DataSource = Em.DataSource.extend({
  fetch: function() {...}
 });</pre>
                             <p>Define views</p>
-                            <pre>App.EmployeesListView = SC.CollectionView.extend({
+                            <pre>App.EmployeesListView = Em.CollectionView.extend({
   contentBinding: 'App.Employees',
   tagName: 'tbody'
 });
 
-App.ToolbarView = SC.View.extend({
+App.ToolbarView = Em.View.extend({
   classNames: ['toolbar'],
   contentBinding: 'App.Employees'
 });</pre>
                             <p>Define a controller</p>
-                            <pre>App.Employees = SC.ArrayProxy.create({
+                            <pre>App.Employees = Em.ArrayProxy.create({
   rangeStart: 0,
   rangeWindowSize: 10,
   totalBinding: '.contentObjects.length'
 });</pre>
                         <p>Finally define an application, register it with initialization queue and load modules</p>
-                        <pre>App = SC.Application.create(SC.QueueActionSupport, {
-  store: SC.Store.create().from('App.DataSource'),
+                        <pre>App = Em.Application.create(Em.QueueActionSupport, {
+  store: Em.Store.create().from('App.DataSource'),
 
-  queue: SC.initializationQueue,
+  queue: Em.initializationQueue,
   action: function() {
     if (this.get('isError')) {
-      SC.Logger.error('Module Loading Error',
+      Em.Logger.error('Module Loading Error',
         this.getPath('errorObject.responseText'));
       return;
     }
   }
 });
 
-SC.initializationQueue.loadScripts(...);
+Em.initializationQueue.loadScripts(...);
 </pre>
                         </div>
                     </div>
