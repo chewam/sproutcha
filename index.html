@@ -3,7 +3,7 @@
     <head>
         <title>SproutCha</title>
 
-        <meta name="keywords" content="javascript, framework, compare, examples, extjs, sencha, comparison, sproutcore, ember, http://github.com/goldledoigt/sproutcha, http://goldledoigt.github.com/sproutcha, aspects" />
+        <meta name="keywords" content="javascript, framework, compare, examples, extjs, sencha, comparison, ember, ember, http://github.com/goldledoigt/sproutcha, http://goldledoigt.github.com/sproutcha, aspects" />
         <meta name="description" content="The aim of this project is to compare the libraries Ember and Sencha. This comparison is done on small examples illustrating some imporant features of these two frameworks. The examples are not intended to teach the best practices of those libraries, but rather to show how to perform a specific task in the easiest way.
 
         Because Ember does not have any UI at the moment, the graphical components of Sencha are not used and all examples are based on the CSS library Bootstrap, from Twitter.
@@ -61,15 +61,15 @@
                 border: 1px solid #DDD;
                 border-radius: 5px;
             }
-            .sencha, .sproutcore {
+            .sencha, .ember {
                 padding: 5px 0 5px 40px;
                 background-repeat: no-repeat;
             }
             .sencha {
                 background-image: url('img/sencha.png');
             }
-            .sproutcore {
-                background-image: url('img/sproutcore.png');
+            .ember {
+                background-image: url('img/ember.png');
             }
             .tabs > li > a {
                 outline: none;
@@ -97,6 +97,7 @@
                         <li class=""><a href="#store">Store</a></li>
                         <li class=""><a href="#geolocation">GeoLocation</a></li>
                         <li class=""><a href="#mvc">MVC</a></li>
+                        <li class=""><a href="#routing">Routing</a></li>
                     </ul>
                 </div>
             </div>
@@ -107,7 +108,7 @@
                 <a href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a>
                 <g:plusone size="medium" annotation="none"></g:plusone>
             </div>
-            <h1><span class="sproutcore">Ember</span> vs <span class="sencha">Sencha</span> <small>vs whatever...</small></h1>
+            <h1><span class="ember">Ember</span> vs <span class="sencha">Sencha</span> <small>vs whatever...</small></h1>
 
             <div class="row header-text">
               <div class="span4">
@@ -135,7 +136,7 @@
 
                     <ul class="tabs">
                         <li class="active"><a href="#class-sencha">ExtJS 4</a></li>
-                        <li><a href="#class-sproutcore">Ember</a></li>
+                        <li><a href="#class-ember">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="class-sencha">
@@ -179,8 +180,8 @@ var employee2 = Ext.create('My.Employee', {...});
 employee1.id // 1
 employee2.id // 2</pre>
                         </div>
-                        <div id="class-sproutcore">
-                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/class.html">example</a>
+                        <div id="class-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/class.html">example</a>
                             <p>A Person class is created with properties `firstName` and `lastName`.</p>
                             <div style="clear: both;"></div>
                             <pre>App.Person = Em.Object.extend({
@@ -243,7 +244,7 @@ employee2.get('id') // 2</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#model-sencha">ExtJS 4</a></li>
-                        <li><a href="#model-sproutcore">Ember</a></li>
+                        <li><a href="#model-ember">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="model-sencha">
@@ -269,8 +270,8 @@ employee.save({
     success: function (employee) {...}
 });</pre>
                         </div>
-                        <div id="model-sproutcore">
-                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/model.html">example</a>
+                        <div id="model-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/model.html">example</a>
                             <p>Define the store</p>
                             <div style="clear: both;"></div>
                             <pre>App = Em.Application.create({
@@ -316,7 +317,7 @@ employee.save({
 
                     <ul class="tabs">
                         <li class="active"><a href="#store-sencha">ExtJS 4</a></li>
-                        <li><a href="#store-sproutcore">Ember</a></li>
+                        <li><a href="#store-ember">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="store-sencha">
@@ -348,8 +349,8 @@ employee.save({
                             <pre>store.nextPage();
 store.previousPage();</pre>
                         </div>
-                        <div id="store-sproutcore">
-                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/store.html">example</a>
+                        <div id="store-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/store.html">example</a>
                             <p>Create and load store</p>
                             <div style="clear: both;"></div>
                             <pre>App = Em.Application.create({
@@ -433,7 +434,7 @@ App.Employees.previousPage();</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#geolocation-sencha">ExtJS 4</a></li>
-                        <li><a href="#geolocation-sproutcore">Ember</a></li>
+                        <li><a href="#geolocation-ember">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="geolocation-sencha">
@@ -458,8 +459,8 @@ App.Employees.previousPage();</pre>
     message: 'Geolocation is not supported by your web browser!'
 });</pre>
                         </div>
-                        <div id="geolocation-sproutcore">
-                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/geolocation.html">example</a>
+                        <div id="geolocation-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/geolocation.html">example</a>
                             <p>Initialize a GeoLocation</p>
                             <div style="clear: both;"></div>
                             <pre>App.currentLocation = Em.GeoLocation.create({autoUpdate: false});</pre>
@@ -496,7 +497,7 @@ App.Employees.previousPage();</pre>
 
                     <ul class="tabs">
                         <li class="active"><a href="#mvc-sencha">ExtJS 4</a></li>
-                        <li><a href="#mvc-sproutcore">Ember</a></li>
+                        <li><a href="#mvc-ember">Ember</a></li>
                     </ul>
                     <div class="pill-content">
                         <div class="active" id="mvc-sencha">
@@ -543,8 +544,8 @@ Ext.define('MyApp.view.PagingToolbar', {
 });</pre>
                         </div>
 
-                        <div id="mvc-sproutcore">
-                            <a class="btn success pull-right" target="_blank" href="examples/sproutcore/mvc.html">example</a>
+                        <div id="mvc-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/mvc.html">example</a>
                             <p>Define a model</p>
                             <div style="clear: both;"></div>
                             <pre>App.Employee = Em.Record.extend({
@@ -590,6 +591,49 @@ App.ToolbarView = Em.View.extend({
                 </div>
             </div>
 
+            <!-- Routing -->
+
+            <div id="routing" class="page-header"><h2>Routing <small>manage your content</small></h2></div>
+            <div class="row">
+                <div class="span6">
+                    <img class="thumbnail" src="img/routing.png" alt="routing">
+                </div>
+                <div class="span10">
+                    <p>In this example we use routing to manage some tabs.</p>
+
+                    <!-- TABS -->
+
+                    <ul class="tabs">
+                        <li class="active"><a href="#routing-sencha">ExtJS 4</a></li>
+                        <li><a href="#routing-ember">Ember</a></li>
+                    </ul>
+                    <div class="pill-content">
+                        <div class="active" id="routing-sencha">
+                            <a class="btn success pull-right" target="_blank" href="examples/extjs/routing.html">example</a>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div id="routing-ember">
+                            <a class="btn success pull-right" target="_blank" href="examples/ember/routing.html">example</a>
+                            <p>Define a state manager</p>
+                            <div style="clear: both;"></div>
+                            <pre>App.tabs = Em.StateManager.create({
+  rootElement: '#content',
+
+  home: Em.ViewState.create({
+    view: Em.View.create({
+      templateName: 'pages/home'
+    })
+  })
+
+  ...
+});
+</pre>
+                            <p>Add a route</p>
+<pre>Em.routes.add(':tab', App.tabs, 'goToState');</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
