@@ -8,7 +8,38 @@
         <script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.min.js" type="text/javascript"></script>
         <script src="assets/ember-datastore.js" type="text/javascript"></script>
         <script src="assets/ember-sparsearray.js" type="text/javascript"></script>
-        <script src="assets/loader.js" type="text/javascript"></script>
+
+        <script type="text/x-handlebars" data-template-name="application">
+          <div id="grid">
+            <table class="bordered-table zebra-striped">
+              <thead><tr>
+                <th>First name</th>
+                <th>Last Name</th>
+                <th>Salary</th>
+                <th>Company</th>
+              </tr></thead>
+              {{#collection App.EmployeesListView}}
+                <td>{{content.first_name}}</td>
+                <td>{{content.last_name}}</td>
+                <td>{{content.salary}}</td>
+                <td>{{content.company.name}}</td>
+              {{/collection}}
+            </table>
+          </div>
+          <div class="toolbar">
+          {{#view App.ToolbarView}}
+            <div class="pagination">
+              <ul>
+                {{#view App.PreviousButton}}<a href="#">&larr; Previous</a>{{/view}}
+                {{#view App.NextButton}}<a href="#">Next &rarr;</a>{{/view}}
+              </ul>
+            </div>
+            <div id="info">
+              <div>page: {{content.page}}/{{content.totalPages}}</div>
+              <div>{{content.rangeStartOne}} - {{content.rangeStop}} of {{content.total}}</div>
+            </div>
+          {{/view}}
+        </script>
 
         <style>
             div, table, tr, td, th {
@@ -40,14 +71,11 @@
           App = Ember.Application.create({
             store: Ember.Store.create().from('App.DataSource'),
 
-            loadError: function(xhr) {
-              $.holdReady(true);
-              Ember.Logger.error('Modules Loading Error: %@'.fmt(xhr.responseText));
-            },
-
             ready: function() {
+              this._super();
+
               /**
-               * Create a View from the loaded template
+               * Create a View from the template
                */
               Ember.View.create({
                 templateName: 'application',
@@ -61,18 +89,13 @@
                 App.store.find(Ember.Query.remote(App.Employee)));
             }
           });
-
-          //SC.Loader.set('delegate', App);
-
-          Loader.load(
-            'mvc/templates/application.hbs',
-            'mvc/store/data_source.js',
-            'mvc/models/employee.js',
-            'mvc/models/company.js',
-            'mvc/controllers/employees.js',
-            'mvc/views/list.js',
-            'mvc/views/toolbar.js'
-          );
         </script>
+
+        <script src="mvc/store/data_source.js" type="text/javascript"></script>
+        <script src="mvc/models/employee.js" type="text/javascript"></script>
+        <script src="mvc/models/company.js" type="text/javascript"></script>
+        <script src="mvc/controllers/employees.js" type="text/javascript"></script>
+        <script src="mvc/views/list.js" type="text/javascript"></script>
+        <script src="mvc/views/toolbar.js" type="text/javascript"></script>
     </body>
 </html>
