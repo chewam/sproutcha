@@ -575,21 +575,15 @@ App.ToolbarView = Em.View.extend({
   rangeWindowSize: 10,
   totalBinding: '.contentObjects.length'
 });</pre>
-                        <p>Finally define an application, register it with initialization queue and load modules</p>
-                        <pre>App = Em.Application.create(Em.QueueActionSupport, {
+                        <p>Finally define an application</p>
+                        <pre>App = Em.Application.create({
   store: Em.Store.create().from('App.DataSource'),
 
-  queue: Em.initializationQueue,
-  action: function() {
-    if (this.get('isError')) {
-      Em.Logger.error('Module Loading Error',
-        this.getPath('errorObject.responseText'));
-      return;
-    }
+  ready: function() {
+    ...
   }
 });
 
-Em.initializationQueue.loadScripts(...);
 </pre>
                         </div>
                     </div>
