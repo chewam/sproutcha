@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
     <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
     <script src="http://cloud.github.com/downloads/emberjs/ember.js/ember-0.9.min.js" type="text/javascript"></script>
+    <script src="assets/ember-routing.js" type="text/javascript"></script>
 
     <style>
       body {
@@ -23,15 +24,15 @@
     
     <div class="container">
       <script type="text/x-handlebars" data-view="App.TabsView">
-        {{view tabView action="home"}}
-        {{view tabView action="projects"}}
-        {{view tabView action="about"}}
+        {{view tabView title="Home"}}
+        {{view tabView title="Projects"}}
+        {{view tabView title="About"}}
       </script>
       <div id="content"></div>
     </div>
   
     <script type="text/x-handlebars" data-template-name="tab">
-      <a {{bindAttr href="href"}}>{{action}}</a>
+      <a {{bindAttr href="href"}}>{{title}}</a>
     </script>
 
     <script type="text/x-handlebars" data-template-name="pages/home">
@@ -47,60 +48,66 @@
     </script>
 
     <script type="text/javascript">
-      App = Em.Application.create();
+      App = Em.Application.create({
+        ready: function() {
+          this._super();
+          App.tabs.goToState(Em.routes.get('location'));
+        }
+      });
 
       App.tabs = Em.StateManager.create({
-        initialState: 'homePage',
 
         rootElement: '#content',
 
-        // States
-        homePage: Em.ViewState.create({
+        home: Em.ViewState.create({
           view: Em.View.create({
             templateName: 'pages/home'
           })
         }),
 
-        projectsPage: Em.ViewState.create({
+        projects: Em.ViewState.create({
           view: Em.View.create({
             templateName: 'pages/projects'
           })
         }),
 
-        aboutPage: Em.ViewState.create({
+        about: Em.ViewState.create({
           view: Em.View.create({
             templateName: 'pages/about'
           })
         }),
 
-        // Events
-        home: function() {
-          this.goToState('homePage');
-        },
-
-        projects: function() {
-          this.goToState('projectsPage');
-        },
-
-        about: function() {
-          this.goToState('aboutPage');
+        goToState: function(state) {
+          if (state && typeof state !== 'string' && state.tab) {
+            state = state.tab
+          }
+          if (Em.empty(state)) {
+            state = "home";
+          }
+          if (typeof state === 'string' && this.getPath('currentState.name') !== ".%@".fmt(state)) {
+            this._super(state);
+          }
         }
       });
+
+      Em.routes.add(':tab', App.tabs, 'goToState');
 
       App.TabsView = Em.View.extend({
         tagName: 'ul',
         classNames: ['tabs'],
-        tabView: Em.Button.extend({
+        tabView: Em.View.extend({
           tagName: 'li',
           templateName: 'tab',
           classNameBindings: ['active'],
           active: function() {
-            return App.tabs.getPath('currentState.name') === ".%@Page".fmt(this.get('action'));
-          }.property('action', 'App.tabs.currentState').cacheable(),
+            return App.tabs.getPath('currentState.name') === ".%@".fmt(this.get('tabName'));
+          }.property('tabName', 'App.tabs.currentState').cacheable(),
           href: function() {
-            return '#'+this.get('action');
-          }.property('action').cacheable(),
-          target: 'App.tabs'
+            return '#'+this.get('tabName');
+          }.property('tabName').cacheable(),
+          tabName: function() {
+            return this.get('title').toLowerCase();
+          }.property('title').cacheable()
         })
       });
     </script>

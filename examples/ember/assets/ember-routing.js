@@ -491,8 +491,8 @@ var routes = Ember.routes = Ember.Object.create(
 
   getRoute: function(route, params) {
     var firstRoute = this._firstRoute;
-    if (params == null) {
-      params = {}
+    if (params === null) {
+      params = {};
     }
 
     return firstRoute.routeForParts(route.split('/'), params);
