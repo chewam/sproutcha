@@ -14,8 +14,8 @@
         <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
         <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
         <script src="http://code.jquery.com/jquery-1.7.1.min.js" type="text/javascript"></script>
-        <script type="text/javascript" src="site/js/bootstrap-tabs.js"></script>
-        <script type="text/javascript" src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-scrollspy.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/1.4.0/js/bootstrap-tabs.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/1.4.0/js/bootstrap-scrollspy.min.js"></script>
 
         <style>
             body {
@@ -74,7 +74,7 @@
             .tabs > li > a {
                 outline: none;
             }
-            .pill-content > div {
+            .tab-content > div {
                 padding: 10px;
             }
             .btn.success.pull-right {
@@ -138,8 +138,8 @@
                         <li class="active"><a href="#class-sencha">ExtJS 4</a></li>
                         <li><a href="#class-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="class-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="class-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/class.html">example</a>
                             <p>A Person class is created. In the config object a list of configuration options with their default values, for which automatically accessor methods are generated. The method initconfig automatically updates the values of the config attributes.</p>
                             <div style="clear: both;"></div>
@@ -180,7 +180,7 @@ var employee2 = Ext.create('My.Employee', {...});
 employee1.id // 1
 employee2.id // 2</pre>
                         </div>
-                        <div id="class-ember">
+                        <div id="class-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/class.html">example</a>
                             <p>A Person class is created with properties `firstName` and `lastName`.</p>
                             <div style="clear: both;"></div>
@@ -246,8 +246,8 @@ employee2.get('id') // 2</pre>
                         <li class="active"><a href="#model-sencha">ExtJS 4</a></li>
                         <li><a href="#model-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="model-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="model-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/model.html">example</a>
                             <p>Define the model</p>
                             <div style="clear: both;"></div>
@@ -270,7 +270,7 @@ employee.save({
     success: function (employee) {...}
 });</pre>
                         </div>
-                        <div id="model-ember">
+                        <div id="model-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/model.html">example</a>
                             <p>Define the store</p>
                             <div style="clear: both;"></div>
@@ -319,8 +319,8 @@ employee.save({
                         <li class="active"><a href="#store-sencha">ExtJS 4</a></li>
                         <li><a href="#store-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="store-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="store-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/store.html">example</a>
                             <p>Define the model</p>
                             <div style="clear: both;"></div>
@@ -349,7 +349,7 @@ employee.save({
                             <pre>store.nextPage();
 store.previousPage();</pre>
                         </div>
-                        <div id="store-ember">
+                        <div id="store-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/store.html">example</a>
                             <p>Create and load store</p>
                             <div style="clear: both;"></div>
@@ -436,8 +436,8 @@ App.Employees.previousPage();</pre>
                         <li class="active"><a href="#geolocation-sencha">ExtJS 4</a></li>
                         <li><a href="#geolocation-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="geolocation-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="geolocation-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/geolocation.html">example</a>
                             <p>Define a singleton to ease the use of navigator.geolocation</p>
                             <div style="clear: both;"></div>
@@ -459,7 +459,7 @@ App.Employees.previousPage();</pre>
     message: 'Geolocation is not supported by your web browser!'
 });</pre>
                         </div>
-                        <div id="geolocation-ember">
+                        <div id="geolocation-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/geolocation.html">example</a>
                             <p>Initialize a GeoLocation</p>
                             <div style="clear: both;"></div>
@@ -499,8 +499,8 @@ App.Employees.previousPage();</pre>
                         <li class="active"><a href="#mvc-sencha">ExtJS 4</a></li>
                         <li><a href="#mvc-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="mvc-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="mvc-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/mvc.html">example</a>
                             <p>Define a model</p>
                             <div style="clear: both;"></div>
@@ -544,7 +544,7 @@ Ext.define('MyApp.view.PagingToolbar', {
 });</pre>
                         </div>
 
-                        <div id="mvc-ember">
+                        <div id="mvc-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/mvc.html">example</a>
                             <p>Define a model</p>
                             <div style="clear: both;"></div>
@@ -607,12 +607,12 @@ App.ToolbarView = Em.View.extend({
                         <li class="active"><a href="#routing-sencha">ExtJS 4</a></li>
                         <li><a href="#routing-ember">Ember</a></li>
                     </ul>
-                    <div class="pill-content">
-                        <div class="active" id="routing-sencha">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="routing-sencha">
                             <a class="btn success pull-right" target="_blank" href="examples/extjs/routing.html">example</a>
                             <div style="clear: both;"></div>
                         </div>
-                        <div id="routing-ember">
+                        <div id="routing-ember" class="tab-pane">
                             <a class="btn success pull-right" target="_blank" href="examples/ember/routing.html">example</a>
                             <p>Define a state manager</p>
                             <div style="clear: both;"></div>
